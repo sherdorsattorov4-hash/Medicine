@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Атлас стоматолога — уроки для студентов-медиков</title>
+  <meta name="description" content="Образовательный сайт для студентов-медиков: интерактивные уроки по анатомии, гистологии и морфологии зубов.">
+
+  <!-- Шрифты (с запасными системными шрифтами с засечками) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap&subset=cyrillic" rel="stylesheet">
+
+  <!-- Tailwind CSS через CDN (вспомогательные утилиты); базовые стили встроены ниже -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+/* ==========================================================================
+   Атлас стоматолога — стили
+   Академический стиль: бумажный фон, тёмно-синий текст, бордовые акценты,
+   шрифты с засечками. Сайт работает и без Tailwind CDN: весь базовый
+   layout описан здесь, Tailwind используется как дополнение.
+   ========================================================================== */
+
+:root {
+  --paper: #fbf8f1;
+  --paper-2: #f3eee0;
+  --ink: #1b2a41;
+  --ink-soft: #44546a;
+  --muted: #6b7280;
+  --accent: #8c2f39;       /* бордовый */
+  --accent-soft: #f4e3e5;
+  --gold: #b08d57;
+  --line: #d9d0b9;
+  --card: #ffffff;
+  --shadow: 0 1px 2px rgba(27, 42, 65, .08), 0 8px 24px rgba(27, 42, 65, .07);
+  --font-head: "Playfair Display", Georgia, "Times New Roman", serif;
+  --font-body: "Source Serif 4", Georgia, "Times New Roman", serif;
+  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+img, svg { max-width: 100%; height: auto; }
+a { color: var(--accent); }
+button { font-family: var(--font-ui); cursor: pointer; }
+:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+
+/* ---------- Шапка сайта ---------- */
+.site-header {
+  background: var(--ink);
+  color: #fff;
+  border-bottom: 4px solid var(--accent);
+}
+.site-header .wrap {
+  max-width: 1180px; margin: 0 auto; padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.brand { display: flex; align-items: center; gap: 12px; color: #fff; text-decoration: none; }
+.brand-mark {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: var(--paper); color: var(--accent);
+  display: grid; place-items: center; font-family: var(--font-head); font-weight: 700; font-size: 20px;
+}
+.brand-title { font-family: var(--font-head); font-size: 22px; font-weight: 700; letter-spacing: .01em; }
+.brand-sub { font-family: var(--font-ui); font-size: 12px; opacity: .75; letter-spacing: .08em; text-transform: uppercase; }
+.header-link { color: #fff; font-family: var(--font-ui); font-size: 14px; text-decoration: none; opacity: .9; }
+.header-link:hover { text-decoration: underline; }
+
+/* ---------- Главная ---------- */
+.hero { max-width: 1180px; margin: 0 auto; padding: 56px 20px 28px; }
+.eyebrow {
+  font-family: var(--font-ui); font-size: 12px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--accent);
+}
+.hero h1 {
+  font-family: var(--font-head); font-size: clamp(32px, 5vw, 52px);
+  line-height: 1.12; margin: 10px 0 14px; max-width: 18em;
+}
+.hero p { max-width: 42em; color: var(--ink-soft); margin: 0; }
+
+.grid-lessons {
+  max-width: 1180px; margin: 0 auto; padding: 20px 20px 72px;
+  display: grid; gap: 24px;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+}
+.lesson-card {
+  display: flex; flex-direction: column;
+  background: var(--card); border: 1px solid var(--line); border-radius: 6px;
+  overflow: hidden; text-decoration: none; color: inherit; box-shadow: var(--shadow);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+a.lesson-card:hover { transform: translateY(-3px); box-shadow: 0 2px 4px rgba(27,42,65,.1), 0 14px 32px rgba(27,42,65,.14); }
+.lesson-card .thumb {
+  aspect-ratio: 16 / 10; background: var(--paper-2);
+  border-bottom: 3px solid var(--accent); display: grid; place-items: center; overflow: hidden;
+}
+.lesson-card .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: center top; display: block; }
+.lesson-card .body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.lesson-card .num { font-family: var(--font-ui); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.lesson-card h2 { font-family: var(--font-head); font-size: 21px; line-height: 1.25; margin: 0; }
+.lesson-card p { margin: 0; font-size: 15.5px; color: var(--ink-soft); line-height: 1.55; }
+.lesson-card .meta { margin-top: auto; padding-top: 10px; font-family: var(--font-ui); font-size: 13px; color: var(--muted); display: flex; gap: 14px; flex-wrap: wrap; }
+.lesson-card.soon { opacity: .72; border-style: dashed; box-shadow: none; }
+.lesson-card.soon .thumb { background: repeating-linear-gradient(45deg, var(--paper-2), var(--paper-2) 12px, #efe8d4 12px, #efe8d4 24px); border-bottom-color: var(--line); }
+.lesson-card.soon .thumb span { font-family: var(--font-head); font-size: 20px; color: var(--muted); }
+
+.site-footer { border-top: 1px solid var(--line); padding: 28px 20px; text-align: center; font-family: var(--font-ui); font-size: 13px; color: var(--muted); }
+
+/* ---------- Страница урока: каркас ---------- */
+.lesson-shell { display: grid; grid-template-columns: 290px minmax(0, 1fr); min-height: calc(100vh - 72px); }
+.toc {
+  background: var(--paper-2); border-right: 1px solid var(--line);
+  padding: 20px 14px 40px; position: sticky; top: 0; align-self: start;
+  height: calc(100vh - 72px); overflow-y: auto;
+}
+.toc h3 { font-family: var(--font-ui); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin: 0 8px 10px; }
+.toc ol { list-style: none; margin: 0; padding: 0; counter-reset: toc; }
+.toc li button {
+  width: 100%; text-align: left; background: none; border: 0; border-left: 3px solid transparent;
+  padding: 8px 10px; font-family: var(--font-ui); font-size: 14px; color: var(--ink-soft);
+  display: flex; gap: 10px; line-height: 1.35; border-radius: 0 4px 4px 0;
+}
+.toc li button::before { counter-increment: toc; content: counter(toc); color: var(--gold); font-weight: 600; min-width: 20px; }
+.toc li button:hover { background: rgba(255,255,255,.7); }
+.toc li button[aria-current="true"] { background: #fff; border-left-color: var(--accent); color: var(--ink); font-weight: 600; }
+
+.stage { min-width: 0; display: flex; flex-direction: column; }
+.toolbar {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+  padding: 12px 24px; border-bottom: 1px solid var(--line); background: var(--paper);
+  position: sticky; top: 0; z-index: 20;
+}
+.toolbar .title { font-family: var(--font-head); font-size: 17px; font-weight: 700; min-width: 0; }
+.toolbar .title small { display: block; font-family: var(--font-ui); font-weight: 500; font-size: 12px; color: var(--muted); }
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn {
+  background: #fff; border: 1px solid var(--line); color: var(--ink);
+  padding: 8px 14px; border-radius: 4px; font-size: 14px; font-weight: 500;
+}
+.btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.btn:disabled { opacity: .4; cursor: default; }
+.btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn.primary:hover:not(:disabled) { background: #70222b; color: #fff; }
+.btn[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.toc-toggle { display: none; }
+
+.progress { height: 4px; background: var(--line); }
+.progress > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .25s ease; }
+
+.slide-area { padding: 28px 24px 12px; flex: 1; }
+.slide {
+  max-width: 960px; margin: 0 auto; background: var(--card);
+  border: 1px solid var(--line); border-top: 5px solid var(--accent);
+  border-radius: 4px; box-shadow: var(--shadow); padding: 40px 48px 44px;
+}
+.slide .kicker { font-family: var(--font-ui); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.slide h2 { font-family: var(--font-head); font-size: clamp(26px, 3.4vw, 38px); line-height: 1.2; margin: 6px 0 18px; }
+.slide h3 { font-family: var(--font-head); font-size: 22px; margin: 28px 0 8px; color: var(--accent); }
+.slide h4 { font-family: var(--font-ui); font-size: 13px; letter-spacing: .1em; text-transform: uppercase; margin: 22px 0 6px; color: var(--ink-soft); }
+.slide p { margin: 0 0 14px; }
+.slide ul, .slide ol { padding-left: 1.3em; margin: 0 0 14px; }
+.slide li { margin-bottom: 6px; }
+.slide .lead { font-size: 20px; color: var(--ink-soft); line-height: 1.55; }
+.slide em.lat { color: var(--ink-soft); }
+
+.slide figure { margin: 22px 0; border: 1px solid var(--line); background: var(--paper); border-radius: 4px; overflow: hidden; }
+.slide figure img { display: block; width: 100%; background: var(--paper); }
+.slide figure.narrow { max-width: 640px; margin-left: auto; margin-right: auto; }
+.slide figcaption { font-family: var(--font-ui); font-size: 13px; color: var(--muted); padding: 10px 14px; border-top: 1px solid var(--line); background: #fff; line-height: 1.45; }
+.slide figcaption b { color: var(--ink); }
+
+.callout { border-left: 4px solid var(--gold); background: #faf4e4; padding: 14px 18px; margin: 20px 0; border-radius: 0 4px 4px 0; }
+.callout.clinic { border-left-color: var(--accent); background: var(--accent-soft); }
+.callout .tag { display: block; font-family: var(--font-ui); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; margin-bottom: 4px; color: var(--accent); }
+.callout p:last-child { margin-bottom: 0; }
+
+.stats { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin: 22px 0; }
+.stat { border: 1px solid var(--line); border-top: 3px solid var(--accent); padding: 14px 16px; background: var(--paper); border-radius: 3px; }
+.stat b { display: block; font-family: var(--font-head); font-size: 34px; line-height: 1.1; color: var(--accent); }
+.stat span { font-family: var(--font-ui); font-size: 13px; color: var(--ink-soft); }
+
+.cols { display: grid; gap: 22px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin: 18px 0; }
+.panel { border: 1px solid var(--line); border-radius: 4px; padding: 16px 18px; background: var(--paper); }
+.panel h4 { margin-top: 0; }
+
+.table-wrap { overflow-x: auto; margin: 18px 0; border: 1px solid var(--line); border-radius: 4px; }
+table.atlas { width: 100%; border-collapse: collapse; font-family: var(--font-ui); font-size: 14.5px; line-height: 1.45; }
+table.atlas th { background: var(--ink); color: #fff; text-align: left; padding: 10px 12px; font-weight: 600; white-space: nowrap; }
+table.atlas td { padding: 10px 12px; border-top: 1px solid var(--line); vertical-align: top; }
+table.atlas tr:nth-child(even) td { background: var(--paper); }
+table.atlas td:first-child { font-weight: 600; }
+
+.slide-nav { max-width: 960px; margin: 18px auto 36px; display: flex; justify-content: space-between; align-items: center; gap: 12px; font-family: var(--font-ui); font-size: 13px; color: var(--muted); }
+
+/* ---------- Интерактивная FDI-схема ---------- */
+.fdi { margin: 22px 0; }
+.fdi-axis { display: grid; grid-template-columns: 1fr 1fr; text-align: center; font-family: var(--font-ui); font-size: 12px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 4px; }
+.fdi-row { display: grid; grid-template-columns: repeat(16, minmax(0, 1fr)); gap: 3px; }
+.fdi-row.upper { padding-bottom: 6px; border-bottom: 2px solid var(--ink); }
+.fdi-row.lower { padding-top: 6px; }
+.fdi-row + .fdi-row { margin-top: 0; }
+.fdi-tooth {
+  aspect-ratio: 3 / 4; border: 1px solid var(--line); background: #fff; border-radius: 6px 6px 10px 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-ui); font-weight: 700; font-size: clamp(11px, 1.8vw, 17px); color: var(--ink);
+  padding: 0; position: relative;
+}
+.fdi-tooth.g-incisor { background: #f7fbfe; }
+.fdi-tooth.g-canine { background: #eef5ea; }
+.fdi-tooth.g-premolar { background: #fbf3df; }
+.fdi-tooth.g-molar { background: #f6e6e8; }
+.fdi-tooth:hover { border-color: var(--accent); transform: translateY(-2px); }
+.fdi-tooth[aria-pressed="true"] { background: var(--ink); color: #fff; border-color: var(--ink); }
+.fdi-mid { border-left: 3px solid var(--accent); }
+.fdi-legend { display: flex; gap: 14px; flex-wrap: wrap; margin: 10px 0 0; font-family: var(--font-ui); font-size: 12.5px; color: var(--ink-soft); }
+.fdi-legend i { display: inline-block; width: 12px; height: 12px; border: 1px solid var(--line); border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
+.fdi-info { margin-top: 16px; border: 1px solid var(--line); border-left: 5px solid var(--accent); background: var(--paper); padding: 14px 18px; border-radius: 0 4px 4px 0; min-height: 120px; }
+.fdi-info h4 { margin: 0 0 6px; font-size: 12px; }
+.fdi-info .name { font-family: var(--font-head); font-size: 22px; font-weight: 700; }
+.fdi-info dl { display: grid; grid-template-columns: max-content 1fr; gap: 3px 16px; margin: 10px 0 0; font-family: var(--font-ui); font-size: 14px; }
+.fdi-info dt { color: var(--muted); }
+.fdi-info dd { margin: 0; }
+.palmer-sym { display: inline-block; min-width: 26px; text-align: center; padding: 1px 6px; border: 0 solid var(--ink); font-weight: 700; }
+.palmer-sym.q1 { border-bottom-width: 2px; border-right-width: 2px; }
+.palmer-sym.q2 { border-bottom-width: 2px; border-left-width: 2px; }
+.palmer-sym.q3 { border-top-width: 2px; border-left-width: 2px; }
+.palmer-sym.q4 { border-top-width: 2px; border-right-width: 2px; }
+
+/* ---------- Глоссарий ---------- */
+.glossary-search {
+  width: 100%; padding: 12px 14px; border: 1px solid var(--line); border-radius: 4px;
+  font-family: var(--font-ui); font-size: 15px; background: #fff; margin: 4px 0 6px;
+}
+.glossary-count { font-family: var(--font-ui); font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+.glossary dl { margin: 0; }
+.glossary .term { border-top: 1px solid var(--line); padding: 12px 0; }
+.glossary .term:first-child { border-top: 0; }
+.glossary dt { font-family: var(--font-head); font-weight: 700; font-size: 18px; }
+.glossary dt small { font-family: var(--font-body); font-style: italic; font-weight: 400; font-size: 15px; color: var(--muted); margin-left: 6px; }
+.glossary dd { margin: 4px 0 0; font-size: 16.5px; color: var(--ink-soft); line-height: 1.55; }
+.glossary .empty { padding: 20px 0; color: var(--muted); font-family: var(--font-ui); }
+.sources { font-family: var(--font-ui); font-size: 13.5px; color: var(--ink-soft); }
+.sources li { margin-bottom: 4px; }
+
+/* ---------- Режим лонгрида ---------- */
+body.mode-long .slide-area { padding-top: 16px; }
+body.mode-long .slide { margin-bottom: 28px; }
+body.mode-long .slide-nav, body.mode-long .progress { display: none; }
+
+/* ---------- Адаптив ---------- */
+@media (max-width: 900px) {
+  .lesson-shell { grid-template-columns: minmax(0, 1fr); }
+  .toc {
+    position: fixed; inset: 0 auto 0 0; width: min(320px, 86vw); height: 100vh; z-index: 50;
+    transform: translateX(-100%); transition: transform .22s ease; visibility: hidden;
+  }
+  body.toc-open .toc { transform: none; visibility: visible; box-shadow: 4px 0 24px rgba(0,0,0,.25); }
+  .toc-toggle { display: inline-block; }
+  .slide { padding: 26px 20px 30px; }
+  .slide-area { padding: 18px 12px 8px; }
+  .toolbar { padding: 10px 12px; }
+  body { font-size: 17px; }
+}
+
+/* ---------- Режим полноэкранной презентации ---------- */
+body.fullscreen-mode .site-header, body.fullscreen-mode .toc { display: none; }
+body.fullscreen-mode .lesson-shell { grid-template-columns: minmax(0, 1fr); }
+body.fullscreen-mode .slide { max-width: 1100px; }
+body.fullscreen-mode .slide .lead { font-size: 22px; }
+
+@media print {
+  .site-header, .toc, .toolbar, .progress, .slide-nav { display: none !important; }
+  .lesson-shell { display: block; }
+  .slide { box-shadow: none; page-break-after: always; border: 0; }
+  body { font-size: 12pt; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; scroll-behavior: auto !important; }
+}
+
+[hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="#/" aria-label="Атлас стоматолога — на главную">
+        <span class="brand-mark" aria-hidden="true">А</span>
+        <span>
+          <span class="brand-title block">Атлас стоматолога</span>
+          <span class="brand-sub block">Учебные материалы для студентов-медиков</span>
+        </span>
+      </a>
+      <a class="header-link" id="headerLink" href="#lessons">Все уроки ↓</a>
+    </div>
+  </header>
+
+  <!-- ===== Вид 1: главная ===== -->
+  <div id="homeView">
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Курс · Морфология зубов</div>
+        <h1>Анатомия, гистология и морфология зубов в формате интерактивных слайдов</h1>
+        <p>Каждый урок — это последовательная презентация: введение, подробные разделы со схемами,
+           ключевые выводы и словарь терминов. Листайте стрелками клавиатуры или переключайтесь в режим лонгрида.</p>
+      </section>
+      <section id="lessons" class="grid-lessons" aria-label="Список уроков">
+        <noscript><p>Для работы каталога уроков включите JavaScript.</p></noscript>
+      </section>
+    </main>
+    <footer class="site-footer">
+      Учебный проект. Схемы выполнены для этого сайта. Материал носит образовательный характер и не заменяет учебник и лекции.
+    </footer>
+  </div>
+
+  <!-- ===== Вид 2: урок ===== -->
+  <div id="lessonView" class="lesson-shell" hidden>
+    <nav class="toc" id="toc" aria-label="Оглавление урока">
+      <h3>Содержание</h3>
+      <ol id="tocList"></ol>
+    </nav>
+
+    <div class="stage">
+      <div class="toolbar">
+        <div class="title" id="lessonTitle"></div>
+        <div class="btn-row">
+          <button class="btn toc-toggle" id="tocToggle" aria-expanded="false" aria-controls="toc">☰ Содержание</button>
+          <button class="btn" id="modeBtn" aria-pressed="false" title="Показать все разделы на одной странице">Лонгрид</button>
+          <button class="btn" id="fsBtn" title="Полноэкранная презентация (F)">На весь экран</button>
+        </div>
+      </div>
+      <div class="progress" aria-hidden="true"><i id="progressBar"></i></div>
+      <main class="slide-area" id="slideArea" aria-live="polite"></main>
+      <div class="slide-nav" id="slideNav">
+        <button class="btn" id="prevBtn">← Назад</button>
+        <span id="counter">1 / 1</span>
+        <button class="btn primary" id="nextBtn">Далее →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+/* Каталог уроков. Чтобы добавить новый урок:
+   1) создайте файл lessons/<id>.js по образцу lessons/dental-01.js;
+   2) добавьте запись сюда (status: 'ready'). */
+window.LESSON_INDEX = [
+  {
+    id: 'dental-01',
+    number: 1,
+    status: 'ready',
+    title: 'Анатомическое, гистологическое и морфологическое строение постоянных зубов. Номенклатура зубов',
+    summary: 'Коронка и корень, эмаль, дентин, пульпа и цемент, особенности резцов, клыков, премоляров и моляров, система FDI.',
+    cover: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4NjAgNzAwIiBmb250LWZhbWlseT0iR2VvcmdpYSwgJ1RpbWVzIE5ldyBSb21hbicsIHNlcmlmIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idDEgZDEiPgogIDx0aXRsZSBpZD0idDEiPtCf0YDQvtC00L7Qu9GM0L3Ri9C5INGA0LDQt9GA0LXQtyDQvtC00L3QvtC60L7RgNC90LXQstC+0LPQviDQt9GD0LHQsDwvdGl0bGU+CiAgPGRlc2MgaWQ9ImQxIj7QodGF0LXQvNCwOiDRjdC80LDQu9GMLCDQtNC10L3RgtC40L0sINC/0YPQu9GM0L/QsCwg0YbQtdC80LXQvdGCLCDQv9C10YDQuNC+0LTQvtC90YIsINCw0LvRjNCy0LXQvtC70Y/RgNC90LDRjyDQutC+0YHRgtGMINC4INC00LXRgdC90LAuPC9kZXNjPgogIDxkZWZzPgogICAgPGNsaXBQYXRoIGlkPSJjbGlwVG9vdGgiPgogICAgICA8cGF0aCBkPSJNIDI5NSAxMDAgQyAzMjAgNTAsIDQ0MCA1MCwgNDY1IDEwMCBDIDQ3NSAxNjAsIDQ3MCAyNDAsIDQ1MiAzMDAgQyA0NDUgNDAwLCA0MjUgNTIwLCAzODAgNjQwIEMgMzM1IDUyMCwgMzE1IDQwMCwgMzA4IDMwMCBDIDI5MCAyNDAsIDI4NSAxNjAsIDI5NSAxMDAgWiIvPgogICAgPC9jbGlwUGF0aD4KICAgIDxjbGlwUGF0aCBpZD0iY2xpcENyb3duIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iODYwIiBoZWlnaHQ9IjMwMCIvPjwvY2xpcFBhdGg+CiAgICA8Y2xpcFBhdGggaWQ9ImNsaXBSb290Ij48cmVjdCB4PSIwIiB5PSIzMDAiIHdpZHRoPSI4NjAiIGhlaWdodD0iNDAwIi8+PC9jbGlwUGF0aD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ0RlbnRpbiIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjAiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmM2UyYjMiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlOWQyOTUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8cGF0dGVybiBpZD0iYm9uZSIgd2lkdGg9IjI2IiBoZWlnaHQ9IjIyIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHJlY3Qgd2lkdGg9IjI2IiBoZWlnaHQ9IjIyIiBmaWxsPSIjZWFkZmMzIi8+CiAgICAgIDxlbGxpcHNlIGN4PSI2IiBjeT0iNiIgcng9IjQiIHJ5PSIyLjIiIGZpbGw9IiNkNmM3OWYiLz4KICAgICAgPGVsbGlwc2UgY3g9IjE5IiBjeT0iMTUiIHJ4PSI1IiByeT0iMi40IiBmaWxsPSIjZDZjNzlmIi8+CiAgICA8L3BhdHRlcm4+CiAgPC9kZWZzPgoKICA8cmVjdCB3aWR0aD0iODYwIiBoZWlnaHQ9IjcwMCIgZmlsbD0iI2ZiZjhmMSIvPgoKICA8IS0tINCQ0LvRjNCy0LXQvtC70Y/RgNC90LDRjyDQutC+0YHRgtGMIC0tPgogIDxyZWN0IHg9IjYwIiB5PSIzNjAiIHdpZHRoPSI2NDAiIGhlaWdodD0iMzIwIiBmaWxsPSJ1cmwoI2JvbmUpIiBzdHJva2U9IiNiOGE3N2MiIHN0cm9rZS13aWR0aD0iMiIvPgoKICA8IS0tINCf0LXRgNC40L7QtNC+0L3Rgjog0YDQvtC30L7QstCw0Y8g0L/QvtC70L7RgdCwINCy0L7QutGA0YPQsyDQutC+0YDQvdGPICjQstC40LTQvdCwINGC0L7Qu9GM0LrQviDQvdCw0YDRg9C20L3QsNGPINC/0L7Qu9C+0LLQuNC90LAg0YjRgtGA0LjRhdCwKSAtLT4KICA8ZyBjbGlwLXBhdGg9InVybCgjY2xpcFJvb3QpIj4KICAgIDxwYXRoIGQ9Ik0gMjk1IDEwMCBDIDMyMCA1MCwgNDQwIDUwLCA0NjUgMTAwIEMgNDc1IDE2MCwgNDcwIDI0MCwgNDUyIDMwMCBDIDQ0NSA0MDAsIDQyNSA1MjAsIDM4MCA2NDAgQyAzMzUgNTIwLCAzMTUgNDAwLCAzMDggMzAwIEMgMjkwIDI0MCwgMjg1IDE2MCwgMjk1IDEwMCBaIgogICAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZDk5YTlmIiBzdHJva2Utd2lkdGg9IjI2Ii8+CiAgPC9nPgoKICA8IS0tINCU0LXRgdC90LAgLS0+CiAgPHBhdGggZD0iTSA2MCAyNTUgQyAxNzAgMjU1IDI2MCAyNzAgMzAzIDI5MiBMIDMwOCAzMDAgTCAzMDggNDAwIEwgNjAgNDAwIFoiIGZpbGw9IiNlOWEzYTgiIHN0cm9rZT0iI2I5NzM3YSIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTSA3MDAgMjU1IEMgNTkwIDI1NSA1MDAgMjcwIDQ1NyAyOTIgTCA0NTIgMzAwIEwgNDUyIDQwMCBMIDcwMCA0MDAgWiIgZmlsbD0iI2U5YTNhOCIgc3Ryb2tlPSIjYjk3MzdhIiBzdHJva2Utd2lkdGg9IjIiLz4KCiAgPCEtLSDQl9GD0LEgLS0+CiAgPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXBUb290aCkiPgogICAgPHJlY3QgeD0iMjUwIiB5PSIyMCIgd2lkdGg9IjI2MCIgaGVpZ2h0PSI2NTAiIGZpbGw9InVybCgjZ0RlbnRpbikiLz4KICAgIDwhLS0g0Y3QvNCw0LvRjDog0LLQvdGD0YLRgNC10L3QvdGP0Y8g0L/QvtC70L7QstC40L3QsCDRiNGC0YDQuNGF0LAg0L/QviDQutC+0L3RgtGD0YDRgyDQutC+0YDQvtC90LrQuCAtLT4KICAgIDxnIGNsaXAtcGF0aD0idXJsKCNjbGlwQ3Jvd24pIj4KICAgICAgPHBhdGggZD0iTSAyOTUgMTAwIEMgMzIwIDUwLCA0NDAgNTAsIDQ2NSAxMDAgQyA0NzUgMTYwLCA0NzAgMjQwLCA0NTIgMzAwIEMgNDQ1IDQwMCwgNDI1IDUyMCwgMzgwIDY0MCBDIDMzNSA1MjAsIDMxNSA0MDAsIDMwOCAzMDAgQyAyOTAgMjQwLCAyODUgMTYwLCAyOTUgMTAwIFoiCiAgICAgICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y3ZmJmZSIgc3Ryb2tlLXdpZHRoPSIzMCIvPgogICAgPC9nPgogICAgPCEtLSDRhtC10LzQtdC90YI6INGC0L7QvdC60LjQuSDRgdC70L7QuSDQv9C+INC60L7QvdGC0YPRgNGDINC60L7RgNC90Y8gLS0+CiAgICA8ZyBjbGlwLXBhdGg9InVybCgjY2xpcFJvb3QpIj4KICAgICAgPHBhdGggZD0iTSAyOTUgMTAwIEMgMzIwIDUwLCA0NDAgNTAsIDQ2NSAxMDAgQyA0NzUgMTYwLCA0NzAgMjQwLCA0NTIgMzAwIEMgNDQ1IDQwMCwgNDI1IDUyMCwgMzgwIDY0MCBDIDMzNSA1MjAsIDMxNSA0MDAsIDMwOCAzMDAgQyAyOTAgMjQwLCAyODUgMTYwLCAyOTUgMTAwIFoiCiAgICAgICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2I3YTA3YSIgc3Ryb2tlLXdpZHRoPSIxMiIvPgogICAgPC9nPgogICAgPCEtLSDQv9GD0LvRjNC/0LAgLS0+CiAgICA8cGF0aCBkPSJNIDM0MiAxMjUgQyAzNjUgMTEwLCAzOTUgMTEwLCA0MTggMTI1IEMgNDI1IDE4MCwgNDE1IDI2MCwgNDAyIDMxMCBDIDM5OCA0MjAsIDM4NiA1NDAsIDM4MCA2MTAgQyAzNzQgNTQwLCAzNjIgNDIwLCAzNTggMzEwIEMgMzQ1IDI2MCwgMzM1IDE4MCwgMzQyIDEyNSBaIgogICAgICAgICAgZmlsbD0iI2U1OGY5NSIgc3Ryb2tlPSIjYjA1NTYwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAgIDxsaW5lIHgxPSIzODAiIHkxPSI2MDAiIHgyPSIzODAiIHkyPSI2NTAiIHN0cm9rZT0iI2U1OGY5NSIgc3Ryb2tlLXdpZHRoPSI2Ii8+CiAgPC9nPgogIDxwYXRoIGQ9Ik0gMjk1IDEwMCBDIDMyMCA1MCwgNDQwIDUwLCA0NjUgMTAwIEMgNDc1IDE2MCwgNDcwIDI0MCwgNDUyIDMwMCBDIDQ0NSA0MDAsIDQyNSA1MjAsIDM4MCA2NDAgQyAzMzUgNTIwLCAzMTUgNDAwLCAzMDggMzAwIEMgMjkwIDI0MCwgMjg1IDE2MCwgMjk1IDEwMCBaIgogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZiNWEzYSIgc3Ryb2tlLXdpZHRoPSIyIi8+CgogIDwhLS0g0KjQtdC50LrQsCDQt9GD0LHQsCAo0Y3QvNCw0LvQtdCy0L4t0YbQtdC80LXQvdGC0L3QsNGPINCz0YDQsNC90LjRhtCwKSAtLT4KICA8bGluZSB4MT0iMjUwIiB5MT0iMzAwIiB4Mj0iNTEwIiB5Mj0iMzAwIiBzdHJva2U9IiM4YzJmMzkiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtZGFzaGFycmF5PSI2IDUiLz4KCiAgPCEtLSDQodC60L7QsdC60Lg6INC60L7RgNC+0L3QutCwIC8g0LrQvtGA0LXQvdGMIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzFiMmE0MSIgc3Ryb2tlLXdpZHRoPSIyIj4KICAgIDxwYXRoIGQ9Ik0gMjYyIDYyIEwgMjUyIDYyIEwgMjUyIDI5NiBMIDI2MiAyOTYiLz4KICAgIDxwYXRoIGQ9Ik0gMjYyIDMwNCBMIDI1MiAzMDQgTCAyNTIgNjQwIEwgMjYyIDY0MCIvPgogIDwvZz4KICA8ZyBmb250LXNpemU9IjE5IiBmaWxsPSIjMWIyYTQxIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9ImVuZCI+CiAgICA8dGV4dCB4PSIyNDAiIHk9IjE4NSI+0JrQvtGA0L7QvdC60LA8L3RleHQ+CiAgICA8dGV4dCB4PSIyNDAiIHk9IjQ3NSI+0JrQvtGA0LXQvdGMPC90ZXh0PgogIDwvZz4KCiAgPCEtLSDQn9C+0LTQv9C40YHQuCDQvdCwINGE0L7QvdC1INGC0LrQsNC90LXQuSAtLT4KICA8dGV4dCB4PSI3NSIgeT0iMzM1IiBmb250LXNpemU9IjE2IiBmaWxsPSIjNWEyYTMwIiBmb250LXN0eWxlPSJpdGFsaWMiPtCU0LXRgdC90LA8L3RleHQ+CiAgPHRleHQgeD0iNzUiIHk9IjY1MCIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzVhNGEyYSIgZm9udC1zdHlsZT0iaXRhbGljIj7QkNC70YzQstC10L7Qu9GP0YDQvdCw0Y8g0LrQvtGB0YLRjDwvdGV4dD4KCiAgPCEtLSDQn9GA0LDQstCw0Y8g0LrQvtC70L7QvdC60LAg0L/QvtC00L/QuNGB0LXQuSDQuCDQstGL0L3QvtGB0LrQuCAtLT4KICA8ZyBzdHJva2U9IiMxYjJhNDEiIHN0cm9rZS13aWR0aD0iMS4yIiBmaWxsPSJub25lIj4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSIxMDAiIHgyPSI0NjIiIHkyPSIxNTAiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSIxNjAiIHgyPSI0NDEiIHkyPSIyMTAiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSIyMjAiIHgyPSIzOTIiIHkyPSIxNzUiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSIzMDAiIHgyPSI0NTUiIHkyPSIzMDAiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSIzOTUiIHgyPSI0MzAiIHkyPSI0NjIiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSI0NTAiIHgyPSIzODQiIHkyPSI1MDAiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSI1MjAiIHgyPSI0MjEiIHkyPSI1MjUiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSI2MjAiIHgyPSIzODQiIHkyPSI2MzQiLz4KICA8L2c+CiAgPGcgZmlsbD0iIzFiMmE0MSI+CiAgICA8Y2lyY2xlIGN4PSI0NjIiIGN5PSIxNTAiIHI9IjMiLz48Y2lyY2xlIGN4PSI0NDEiIGN5PSIyMTAiIHI9IjMiLz48Y2lyY2xlIGN4PSIzOTIiIGN5PSIxNzUiIHI9IjMiLz4KICAgIDxjaXJjbGUgY3g9IjQ1NSIgY3k9IjMwMCIgcj0iMyIvPjxjaXJjbGUgY3g9IjQzMCIgY3k9IjQ2MiIgcj0iMyIvPjxjaXJjbGUgY3g9IjM4NCIgY3k9IjUwMCIgcj0iMyIvPgogICAgPGNpcmNsZSBjeD0iNDIxIiBjeT0iNTI1IiByPSIzIi8+PGNpcmNsZSBjeD0iMzg0IiBjeT0iNjM0IiByPSIzIi8+CiAgPC9nPgogIDxnIGZvbnQtc2l6ZT0iMTciIGZpbGw9IiMxYjJhNDEiPgogICAgPHRleHQgeD0iNTU1IiB5PSIxMDUiPjx0c3BhbiBmb250LXdlaWdodD0iYm9sZCI+0K3QvNCw0LvRjDwvdHNwYW4+IChlbmFtZWx1bSk8L3RleHQ+CiAgICA8dGV4dCB4PSI1NTUiIHk9IjE2NSI+PHRzcGFuIGZvbnQtd2VpZ2h0PSJib2xkIj7QlNC10L3RgtC40L08L3RzcGFuPiAoZGVudGludW0pPC90ZXh0PgogICAgPHRleHQgeD0iNTU1IiB5PSIyMjUiPjx0c3BhbiBmb250LXdlaWdodD0iYm9sZCI+0J/QvtC70L7RgdGC0Ywg0LfRg9Cx0LA8L3RzcGFuPiDRgSDQv9GD0LvRjNC/0L7QuTwvdGV4dD4KICAgIDx0ZXh0IHg9IjU1NSIgeT0iMzA1Ij48dHNwYW4gZm9udC13ZWlnaHQ9ImJvbGQiPtCo0LXQudC60LA8L3RzcGFuPiAo0Y3QvNCw0LvQtdCy0L4t0YbQtdC80LXQvdGC0L3QsNGPINCz0YDQsNC90LjRhtCwKTwvdGV4dD4KICAgIDx0ZXh0IHg9IjU1NSIgeT0iNDAwIj48dHNwYW4gZm9udC13ZWlnaHQ9ImJvbGQiPtCm0LXQvNC10L3RgjwvdHNwYW4+IChjZW1lbnR1bSk8L3RleHQ+CiAgICA8dGV4dCB4PSI1NTUiIHk9IjQ1NSI+PHRzcGFuIGZvbnQtd2VpZ2h0PSJib2xkIj7QmtC+0YDQvdC10LLQvtC5INC60LDQvdCw0Ls8L3RzcGFuPjwvdGV4dD4KICAgIDx0ZXh0IHg9IjU1NSIgeT0iNTI1Ij48dHNwYW4gZm9udC13ZWlnaHQ9ImJvbGQiPtCf0LXRgNC40L7QtNC+0L3RgjwvdHNwYW4+ICjQv9C10YDQuNC+0LTQvtC90YLQsNC70YzQvdCw0Y8g0YHQstGP0LfQutCwKTwvdGV4dD4KICAgIDx0ZXh0IHg9IjU1NSIgeT0iNjI1Ij48dHNwYW4gZm9udC13ZWlnaHQ9ImJvbGQiPtCS0LXRgNGF0YPRiNC10YfQvdC+0LUg0L7RgtCy0LXRgNGB0YLQuNC1PC90c3Bhbj48L3RleHQ+CiAgPC9nPgogIDx0ZXh0IHg9IjIwIiB5PSI2OTAiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiM2YjcyODAiIGZvbnQtc3R5bGU9Iml0YWxpYyIgc3Ryb2tlPSIjZmJmOGYxIiBzdHJva2Utd2lkdGg9IjQiIHBhaW50LW9yZGVyPSJzdHJva2UiPtCh0YXQtdC80LAsINC90LUg0LIg0LzQsNGB0YjRgtCw0LHQtS4g0JDQstGC0L7RgNGB0LrQsNGPINC40LvQu9GO0YHRgtGA0LDRhtC40Y8g0L/RgNC+0LXQutGC0LAuPC90ZXh0Pgo8L3N2Zz4K',
+    coverAlt: 'Схема продольного разреза зуба',
+    slides: 21,
+    minutes: 40
+  },
+  {
+    id: 'dental-02',
+    number: 2,
+    status: 'soon',
+    title: 'Молочные зубы: особенности строения и сроки прорезывания',
+    summary: 'Отличия временных зубов от постоянных, формула молочного прикуса.'
+  },
+  {
+    id: 'dental-03',
+    number: 3,
+    status: 'soon',
+    title: 'Зубные ряды и виды прикуса',
+    summary: 'Окклюзия, артикуляция, физиологические и патологические прикусы.'
+  }
+];
+
+  </script>
+  <script>
+/* ==========================================================================
+   Урок 1. Анатомическое, гистологическое и морфологическое строение
+   постоянных зубов. Номенклатура зубов.
+
+   Формат: window.LESSONS[id] = { number, shortTitle, slides: [...], teeth, glossary, ... }
+   Каждый слайд: { id, kicker, title, tocTitle?, html }.
+   Спец-блоки внутри html:  <div data-fdi></div>  — интерактивная схема FDI,
+                            <div data-glossary></div> — глоссарий с поиском.
+   ========================================================================== */
+window.LESSONS = window.LESSONS || {};
+
+window.LESSONS['dental-01'] = {
+  number: 1,
+  shortTitle: 'Строение постоянных зубов. Номенклатура',
+  title: 'Анатомическое, гистологическое и морфологическое строение постоянных зубов. Номенклатура зубов',
+
+  /* ----------------------------------------------------------------------
+     Данные для интерактивной схемы FDI (индекс = позиция зуба − 1).
+     ---------------------------------------------------------------------- */
+  teeth: [
+    { group: 'incisor', name: 'Центральный резец', latin: 'dens incisivus medialis',
+      upper: { roots: '1, конический', crown: 'долотообразная, режущий край; на нёбной стороне — кингулум и краевые валики', eruption: '7–8 лет' },
+      lower: { roots: '1, уплощён в мезиально-дистальном направлении', crown: 'самая узкая симметричная коронка, ровный режущий край', eruption: '6–7 лет' } },
+    { group: 'incisor', name: 'Боковой резец', latin: 'dens incisivus lateralis',
+      upper: { roots: '1, тонкий, верхушка часто отклонена дистально', crown: 'уже и короче центрального; на нёбной стороне нередка слепая ямка', eruption: '8–9 лет' },
+      lower: { roots: '1, уплощён', crown: 'чуть шире нижнего центрального; режущий край скошен дистально', eruption: '7–8 лет' } },
+    { group: 'canine', name: 'Клык', latin: 'dens caninus',
+      upper: { roots: '1, самый длинный из всех зубов', crown: 'один бугор; мезиальный склон короче дистального', eruption: '11–12 лет' },
+      lower: { roots: '1, уплощён с боков', crown: 'уже и длиннее верхнего, один бугор', eruption: '9–10 лет' } },
+    { group: 'premolar', name: 'Первый премоляр', latin: 'dens premolaris primus',
+      upper: { roots: '2 (щёчный и нёбный) чаще всего; иногда 1', crown: '2 бугра (щёчный крупнее нёбного)', eruption: '10–11 лет' },
+      lower: { roots: '1', crown: '2 бугра: крупный щёчный и малый язычный', eruption: '10–12 лет' } },
+    { group: 'premolar', name: 'Второй премоляр', latin: 'dens premolaris secundus',
+      upper: { roots: '1 (обычно)', crown: '2 бугра примерно равной высоты', eruption: '10–12 лет' },
+      lower: { roots: '1', crown: '2 или 3 бугра (форма с одним щёчным и двумя язычными)', eruption: '11–12 лет' } },
+    { group: 'molar', name: 'Первый моляр', latin: 'dens molaris primus',
+      upper: { roots: '3 (два щёчных и один нёбный)', crown: 'ромбовидная, 4 основных бугра; часто добавочный бугорок Карабелли', eruption: '6–7 лет' },
+      lower: { roots: '2 (мезиальный и дистальный)', crown: '5 бугров (3 щёчных и 2 язычных)', eruption: '6–7 лет' } },
+    { group: 'molar', name: 'Второй моляр', latin: 'dens molaris secundus',
+      upper: { roots: '3, корни сближены, иногда срастаются', crown: '4 бугра, меньше первого моляра', eruption: '12–13 лет' },
+      lower: { roots: '2', crown: '4 бугра, крестообразная система фиссур', eruption: '11–13 лет' } },
+    { group: 'molar', name: 'Третий моляр (зуб мудрости)', latin: 'dens molaris tertius (dens serotinus)',
+      upper: { roots: 'вариабельны, часто сросшиеся', crown: 'форма непостоянна, 3–4 бугра', eruption: '17–25 лет (часто не прорезывается)' },
+      lower: { roots: 'вариабельны, часто сросшиеся', crown: 'форма непостоянна, 4–5 бугров', eruption: '17–25 лет (часто не прорезывается)' } }
+  ],
+
+  /* ----------------------------------------------------------------------
+     Слайды
+     ---------------------------------------------------------------------- */
+  slides: [
+    /* 1 ---------------------------------------------------------------- */
+    { id: 'intro', kicker: 'Введение', title: 'Зубы человека: что нужно знать в начале курса',
+      tocTitle: 'Введение',
+      html: `
+<p class="lead">Зубы — самые твёрдые органы тела человека. Они участвуют в откусывании, разжёвывании пищи, формировании речи и определяют форму нижней части лица. Врач любой специальности должен уметь назвать зуб, описать его строение и понять запись в стоматологической карте.</p>
+
+<div class="stats">
+  <div class="stat"><b>32</b><span>постоянных зуба у взрослого (16 на каждой челюсти)</span></div>
+  <div class="stat"><b>4</b><span>группы: резцы, клыки, премоляры, моляры</span></div>
+  <div class="stat"><b>4+1</b><span>ткани: эмаль, дентин, цемент и пульпа (плюс периодонт)</span></div>
+  <div class="stat"><b>2 цифры</b><span>код зуба в международной системе FDI</span></div>
+</div>
+
+<h3>Цели урока</h3>
+<ul>
+  <li>описать анатомические части зуба и его поверхности;</li>
+  <li>назвать гистологические структуры эмали, дентина, пульпы и цемента и их свойства;</li>
+  <li>отличать резцы, клыки, премоляры и моляры по морфологическим признакам;</li>
+  <li>записывать и читать номер зуба в системе FDI, переводить его в другие системы.</li>
+</ul>
+
+<h3>План</h3>
+<ol>
+  <li>Анатомическое строение: коронка, шейка, корень, полость зуба.</li>
+  <li>Гистология: эмаль, дентин, пульпа, цемент, периодонт.</li>
+  <li>Морфология групп зубов.</li>
+  <li>Номенклатура: латинская анатомическая и международная (FDI).</li>
+  <li>Словарь терминов.</li>
+</ol>
+
+<div class="callout">
+  <span class="tag">Как пользоваться</span>
+  <p>Листайте стрелками <b>← →</b> на клавиатуре или кнопками внизу. Кнопка «Лонгрид» показывает весь урок одной страницей. Клавиша <b>F</b> включает полноэкранную презентацию.</p>
+</div>` },
+
+    /* 2 ---------------------------------------------------------------- */
+    { id: 'anatomy', kicker: 'Раздел 1 · Анатомия', title: 'Общий план строения зуба',
+      tocTitle: 'Коронка, шейка, корень',
+      html: `
+<p>Зуб (<em class="lat">dens</em>) состоит из трёх анатомических частей. Они выделяются по положению относительно десны и костной лунки.</p>
+
+<figure>
+  <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4NjAgNzAwIiBmb250LWZhbWlseT0iR2VvcmdpYSwgJ1RpbWVzIE5ldyBSb21hbicsIHNlcmlmIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idDEgZDEiPgogIDx0aXRsZSBpZD0idDEiPtCf0YDQvtC00L7Qu9GM0L3Ri9C5INGA0LDQt9GA0LXQtyDQvtC00L3QvtC60L7RgNC90LXQstC+0LPQviDQt9GD0LHQsDwvdGl0bGU+CiAgPGRlc2MgaWQ9ImQxIj7QodGF0LXQvNCwOiDRjdC80LDQu9GMLCDQtNC10L3RgtC40L0sINC/0YPQu9GM0L/QsCwg0YbQtdC80LXQvdGCLCDQv9C10YDQuNC+0LTQvtC90YIsINCw0LvRjNCy0LXQvtC70Y/RgNC90LDRjyDQutC+0YHRgtGMINC4INC00LXRgdC90LAuPC9kZXNjPgogIDxkZWZzPgogICAgPGNsaXBQYXRoIGlkPSJjbGlwVG9vdGgiPgogICAgICA8cGF0aCBkPSJNIDI5NSAxMDAgQyAzMjAgNTAsIDQ0MCA1MCwgNDY1IDEwMCBDIDQ3NSAxNjAsIDQ3MCAyNDAsIDQ1MiAzMDAgQyA0NDUgNDAwLCA0MjUgNTIwLCAzODAgNjQwIEMgMzM1IDUyMCwgMzE1IDQwMCwgMzA4IDMwMCBDIDI5MCAyNDAsIDI4NSAxNjAsIDI5NSAxMDAgWiIvPgogICAgPC9jbGlwUGF0aD4KICAgIDxjbGlwUGF0aCBpZD0iY2xpcENyb3duIj48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iODYwIiBoZWlnaHQ9IjMwMCIvPjwvY2xpcFBhdGg+CiAgICA8Y2xpcFBhdGggaWQ9ImNsaXBSb290Ij48cmVjdCB4PSIwIiB5PSIzMDAiIHdpZHRoPSI4NjAiIGhlaWdodD0iNDAwIi8+PC9jbGlwUGF0aD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0iZ0RlbnRpbiIgeDE9IjAiIHkxPSIwIiB4Mj0iMSIgeTI9IjAiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmM2UyYjMiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNlOWQyOTUiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8cGF0dGVybiBpZD0iYm9uZSIgd2lkdGg9IjI2IiBoZWlnaHQ9IjIyIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHJlY3Qgd2lkdGg9IjI2IiBoZWlnaHQ9IjIyIiBmaWxsPSIjZWFkZmMzIi8+CiAgICAgIDxlbGxpcHNlIGN4PSI2IiBjeT0iNiIgcng9IjQiIHJ5PSIyLjIiIGZpbGw9IiNkNmM3OWYiLz4KICAgICAgPGVsbGlwc2UgY3g9IjE5IiBjeT0iMTUiIHJ4PSI1IiByeT0iMi40IiBmaWxsPSIjZDZjNzlmIi8+CiAgICA8L3BhdHRlcm4+CiAgPC9kZWZzPgoKICA8cmVjdCB3aWR0aD0iODYwIiBoZWlnaHQ9IjcwMCIgZmlsbD0iI2ZiZjhmMSIvPgoKICA8IS0tINCQ0LvRjNCy0LXQvtC70Y/RgNC90LDRjyDQutC+0YHRgtGMIC0tPgogIDxyZWN0IHg9IjYwIiB5PSIzNjAiIHdpZHRoPSI2NDAiIGhlaWdodD0iMzIwIiBmaWxsPSJ1cmwoI2JvbmUpIiBzdHJva2U9IiNiOGE3N2MiIHN0cm9rZS13aWR0aD0iMiIvPgoKICA8IS0tINCf0LXRgNC40L7QtNC+0L3Rgjog0YDQvtC30L7QstCw0Y8g0L/QvtC70L7RgdCwINCy0L7QutGA0YPQsyDQutC+0YDQvdGPICjQstC40LTQvdCwINGC0L7Qu9GM0LrQviDQvdCw0YDRg9C20L3QsNGPINC/0L7Qu9C+0LLQuNC90LAg0YjRgtGA0LjRhdCwKSAtLT4KICA8ZyBjbGlwLXBhdGg9InVybCgjY2xpcFJvb3QpIj4KICAgIDxwYXRoIGQ9Ik0gMjk1IDEwMCBDIDMyMCA1MCwgNDQwIDUwLCA0NjUgMTAwIEMgNDc1IDE2MCwgNDcwIDI0MCwgNDUyIDMwMCBDIDQ0NSA0MDAsIDQyNSA1MjAsIDM4MCA2NDAgQyAzMzUgNTIwLCAzMTUgNDAwLCAzMDggMzAwIEMgMjkwIDI0MCwgMjg1IDE2MCwgMjk1IDEwMCBaIgogICAgICAgICAgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZDk5YTlmIiBzdHJva2Utd2lkdGg9IjI2Ii8+CiAgPC9nPgoKICA8IS0tINCU0LXRgdC90LAgLS0+CiAgPHBhdGggZD0iTSA2MCAyNTUgQyAxNzAgMjU1IDI2MCAyNzAgMzAzIDI5MiBMIDMwOCAzMDAgTCAzMDggNDAwIEwgNjAgNDAwIFoiIGZpbGw9IiNlOWEzYTgiIHN0cm9rZT0iI2I5NzM3YSIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPHBhdGggZD0iTSA3MDAgMjU1IEMgNTkwIDI1NSA1MDAgMjcwIDQ1NyAyOTIgTCA0NTIgMzAwIEwgNDUyIDQwMCBMIDcwMCA0MDAgWiIgZmlsbD0iI2U5YTNhOCIgc3Ryb2tlPSIjYjk3MzdhIiBzdHJva2Utd2lkdGg9IjIiLz4KCiAgPCEtLSDQl9GD0LEgLS0+CiAgPGcgY2xpcC1wYXRoPSJ1cmwoI2NsaXBUb290aCkiPgogICAgPHJlY3QgeD0iMjUwIiB5PSIyMCIgd2lkdGg9IjI2MCIgaGVpZ2h0PSI2NTAiIGZpbGw9InVybCgjZ0RlbnRpbikiLz4KICAgIDwhLS0g0Y3QvNCw0LvRjDog0LLQvdGD0YLRgNC10L3QvdGP0Y8g0L/QvtC70L7QstC40L3QsCDRiNGC0YDQuNGF0LAg0L/QviDQutC+0L3RgtGD0YDRgyDQutC+0YDQvtC90LrQuCAtLT4KICAgIDxnIGNsaXAtcGF0aD0idXJsKCNjbGlwQ3Jvd24pIj4KICAgICAgPHBhdGggZD0iTSAyOTUgMTAwIEMgMzIwIDUwLCA0NDAgNTAsIDQ2NSAxMDAgQyA0NzUgMTYwLCA0NzAgMjQwLCA0NTIgMzAwIEMgNDQ1IDQwMCwgNDI1IDUyMCwgMzgwIDY0MCBDIDMzNSA1MjAsIDMxNSA0MDAsIDMwOCAzMDAgQyAyOTAgMjQwLCAyODUgMTYwLCAyOTUgMTAwIFoiCiAgICAgICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2Y3ZmJmZSIgc3Ryb2tlLXdpZHRoPSIzMCIvPgogICAgPC9nPgogICAgPCEtLSDRhtC10LzQtdC90YI6INGC0L7QvdC60LjQuSDRgdC70L7QuSDQv9C+INC60L7QvdGC0YPRgNGDINC60L7RgNC90Y8gLS0+CiAgICA8ZyBjbGlwLXBhdGg9InVybCgjY2xpcFJvb3QpIj4KICAgICAgPHBhdGggZD0iTSAyOTUgMTAwIEMgMzIwIDUwLCA0NDAgNTAsIDQ2NSAxMDAgQyA0NzUgMTYwLCA0NzAgMjQwLCA0NTIgMzAwIEMgNDQ1IDQwMCwgNDI1IDUyMCwgMzgwIDY0MCBDIDMzNSA1MjAsIDMxNSA0MDAsIDMwOCAzMDAgQyAyOTAgMjQwLCAyODUgMTYwLCAyOTUgMTAwIFoiCiAgICAgICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2I3YTA3YSIgc3Ryb2tlLXdpZHRoPSIxMiIvPgogICAgPC9nPgogICAgPCEtLSDQv9GD0LvRjNC/0LAgLS0+CiAgICA8cGF0aCBkPSJNIDM0MiAxMjUgQyAzNjUgMTEwLCAzOTUgMTEwLCA0MTggMTI1IEMgNDI1IDE4MCwgNDE1IDI2MCwgNDAyIDMxMCBDIDM5OCA0MjAsIDM4NiA1NDAsIDM4MCA2MTAgQyAzNzQgNTQwLCAzNjIgNDIwLCAzNTggMzEwIEMgMzQ1IDI2MCwgMzM1IDE4MCwgMzQyIDEyNSBaIgogICAgICAgICAgZmlsbD0iI2U1OGY5NSIgc3Ryb2tlPSIjYjA1NTYwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAgIDxsaW5lIHgxPSIzODAiIHkxPSI2MDAiIHgyPSIzODAiIHkyPSI2NTAiIHN0cm9rZT0iI2U1OGY5NSIgc3Ryb2tlLXdpZHRoPSI2Ii8+CiAgPC9nPgogIDxwYXRoIGQ9Ik0gMjk1IDEwMCBDIDMyMCA1MCwgNDQwIDUwLCA0NjUgMTAwIEMgNDc1IDE2MCwgNDcwIDI0MCwgNDUyIDMwMCBDIDQ0NSA0MDAsIDQyNSA1MjAsIDM4MCA2NDAgQyAzMzUgNTIwLCAzMTUgNDAwLCAzMDggMzAwIEMgMjkwIDI0MCwgMjg1IDE2MCwgMjk1IDEwMCBaIgogICAgICAgIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZiNWEzYSIgc3Ryb2tlLXdpZHRoPSIyIi8+CgogIDwhLS0g0KjQtdC50LrQsCDQt9GD0LHQsCAo0Y3QvNCw0LvQtdCy0L4t0YbQtdC80LXQvdGC0L3QsNGPINCz0YDQsNC90LjRhtCwKSAtLT4KICA8bGluZSB4MT0iMjUwIiB5MT0iMzAwIiB4Mj0iNTEwIiB5Mj0iMzAwIiBzdHJva2U9IiM4YzJmMzkiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtZGFzaGFycmF5PSI2IDUiLz4KCiAgPCEtLSDQodC60L7QsdC60Lg6INC60L7RgNC+0L3QutCwIC8g0LrQvtGA0LXQvdGMIC0tPgogIDxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzFiMmE0MSIgc3Ryb2tlLXdpZHRoPSIyIj4KICAgIDxwYXRoIGQ9Ik0gMjYyIDYyIEwgMjUyIDYyIEwgMjUyIDI5NiBMIDI2MiAyOTYiLz4KICAgIDxwYXRoIGQ9Ik0gMjYyIDMwNCBMIDI1MiAzMDQgTCAyNTIgNjQwIEwgMjYyIDY0MCIvPgogIDwvZz4KICA8ZyBmb250LXNpemU9IjE5IiBmaWxsPSIjMWIyYTQxIiBmb250LXdlaWdodD0iYm9sZCIgdGV4dC1hbmNob3I9ImVuZCI+CiAgICA8dGV4dCB4PSIyNDAiIHk9IjE4NSI+0JrQvtGA0L7QvdC60LA8L3RleHQ+CiAgICA8dGV4dCB4PSIyNDAiIHk9IjQ3NSI+0JrQvtGA0LXQvdGMPC90ZXh0PgogIDwvZz4KCiAgPCEtLSDQn9C+0LTQv9C40YHQuCDQvdCwINGE0L7QvdC1INGC0LrQsNC90LXQuSAtLT4KICA8dGV4dCB4PSI3NSIgeT0iMzM1IiBmb250LXNpemU9IjE2IiBmaWxsPSIjNWEyYTMwIiBmb250LXN0eWxlPSJpdGFsaWMiPtCU0LXRgdC90LA8L3RleHQ+CiAgPHRleHQgeD0iNzUiIHk9IjY1MCIgZm9udC1zaXplPSIxNiIgZmlsbD0iIzVhNGEyYSIgZm9udC1zdHlsZT0iaXRhbGljIj7QkNC70YzQstC10L7Qu9GP0YDQvdCw0Y8g0LrQvtGB0YLRjDwvdGV4dD4KCiAgPCEtLSDQn9GA0LDQstCw0Y8g0LrQvtC70L7QvdC60LAg0L/QvtC00L/QuNGB0LXQuSDQuCDQstGL0L3QvtGB0LrQuCAtLT4KICA8ZyBzdHJva2U9IiMxYjJhNDEiIHN0cm9rZS13aWR0aD0iMS4yIiBmaWxsPSJub25lIj4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSIxMDAiIHgyPSI0NjIiIHkyPSIxNTAiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSIxNjAiIHgyPSI0NDEiIHkyPSIyMTAiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSIyMjAiIHgyPSIzOTIiIHkyPSIxNzUiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSIzMDAiIHgyPSI0NTUiIHkyPSIzMDAiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSIzOTUiIHgyPSI0MzAiIHkyPSI0NjIiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSI0NTAiIHgyPSIzODQiIHkyPSI1MDAiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSI1MjAiIHgyPSI0MjEiIHkyPSI1MjUiLz4KICAgIDxsaW5lIHgxPSI1NDgiIHkxPSI2MjAiIHgyPSIzODQiIHkyPSI2MzQiLz4KICA8L2c+CiAgPGcgZmlsbD0iIzFiMmE0MSI+CiAgICA8Y2lyY2xlIGN4PSI0NjIiIGN5PSIxNTAiIHI9IjMiLz48Y2lyY2xlIGN4PSI0NDEiIGN5PSIyMTAiIHI9IjMiLz48Y2lyY2xlIGN4PSIzOTIiIGN5PSIxNzUiIHI9IjMiLz4KICAgIDxjaXJjbGUgY3g9IjQ1NSIgY3k9IjMwMCIgcj0iMyIvPjxjaXJjbGUgY3g9IjQzMCIgY3k9IjQ2MiIgcj0iMyIvPjxjaXJjbGUgY3g9IjM4NCIgY3k9IjUwMCIgcj0iMyIvPgogICAgPGNpcmNsZSBjeD0iNDIxIiBjeT0iNTI1IiByPSIzIi8+PGNpcmNsZSBjeD0iMzg0IiBjeT0iNjM0IiByPSIzIi8+CiAgPC9nPgogIDxnIGZvbnQtc2l6ZT0iMTciIGZpbGw9IiMxYjJhNDEiPgogICAgPHRleHQgeD0iNTU1IiB5PSIxMDUiPjx0c3BhbiBmb250LXdlaWdodD0iYm9sZCI+0K3QvNCw0LvRjDwvdHNwYW4+IChlbmFtZWx1bSk8L3RleHQ+CiAgICA8dGV4dCB4PSI1NTUiIHk9IjE2NSI+PHRzcGFuIGZvbnQtd2VpZ2h0PSJib2xkIj7QlNC10L3RgtC40L08L3RzcGFuPiAoZGVudGludW0pPC90ZXh0PgogICAgPHRleHQgeD0iNTU1IiB5PSIyMjUiPjx0c3BhbiBmb250LXdlaWdodD0iYm9sZCI+0J/QvtC70L7RgdGC0Ywg0LfRg9Cx0LA8L3RzcGFuPiDRgSDQv9GD0LvRjNC/0L7QuTwvdGV4dD4KICAgIDx0ZXh0IHg9IjU1NSIgeT0iMzA1Ij48dHNwYW4gZm9udC13ZWlnaHQ9ImJvbGQiPtCo0LXQudC60LA8L3RzcGFuPiAo0Y3QvNCw0LvQtdCy0L4t0YbQtdC80LXQvdGC0L3QsNGPINCz0YDQsNC90LjRhtCwKTwvdGV4dD4KICAgIDx0ZXh0IHg9IjU1NSIgeT0iNDAwIj48dHNwYW4gZm9udC13ZWlnaHQ9ImJvbGQiPtCm0LXQvNC10L3RgjwvdHNwYW4+IChjZW1lbnR1bSk8L3RleHQ+CiAgICA8dGV4dCB4PSI1NTUiIHk9IjQ1NSI+PHRzcGFuIGZvbnQtd2VpZ2h0PSJib2xkIj7QmtC+0YDQvdC10LLQvtC5INC60LDQvdCw0Ls8L3RzcGFuPjwvdGV4dD4KICAgIDx0ZXh0IHg9IjU1NSIgeT0iNTI1Ij48dHNwYW4gZm9udC13ZWlnaHQ9ImJvbGQiPtCf0LXRgNC40L7QtNC+0L3RgjwvdHNwYW4+ICjQv9C10YDQuNC+0LTQvtC90YLQsNC70YzQvdCw0Y8g0YHQstGP0LfQutCwKTwvdGV4dD4KICAgIDx0ZXh0IHg9IjU1NSIgeT0iNjI1Ij48dHNwYW4gZm9udC13ZWlnaHQ9ImJvbGQiPtCS0LXRgNGF0YPRiNC10YfQvdC+0LUg0L7RgtCy0LXRgNGB0YLQuNC1PC90c3Bhbj48L3RleHQ+CiAgPC9nPgogIDx0ZXh0IHg9IjIwIiB5PSI2OTAiIGZvbnQtc2l6ZT0iMTMiIGZpbGw9IiM2YjcyODAiIGZvbnQtc3R5bGU9Iml0YWxpYyIgc3Ryb2tlPSIjZmJmOGYxIiBzdHJva2Utd2lkdGg9IjQiIHBhaW50LW9yZGVyPSJzdHJva2UiPtCh0YXQtdC80LAsINC90LUg0LIg0LzQsNGB0YjRgtCw0LHQtS4g0JDQstGC0L7RgNGB0LrQsNGPINC40LvQu9GO0YHRgtGA0LDRhtC40Y8g0L/RgNC+0LXQutGC0LAuPC90ZXh0Pgo8L3N2Zz4K" alt="Схема продольного разреза однокорневого зуба с подписями: эмаль, дентин, полость зуба, шейка, цемент, корневой канал, периодонт, верхушечное отверстие">
+  <figcaption><b>Рис. 1.</b> Продольный разрез однокорневого зуба в челюсти (схема, не в масштабе).</figcaption>
+</figure>
+
+<div class="cols">
+  <div class="panel"><h4>Коронка · corona dentis</h4>
+    <p>Часть зуба, покрытая эмалью. Различают <b>анатомическую коронку</b> (от шейки до жевательной поверхности) и <b>клиническую</b> — ту часть, которая видна во рту над десной. С возрастом при рецессии десны клиническая коронка увеличивается.</p></div>
+  <div class="panel"><h4>Шейка · cervix dentis</h4>
+    <p>Суженное место на границе коронки и корня, проходящее по эмалево-цементной границе. Здесь прикрепляется зубодесневое соединение.</p></div>
+  <div class="panel"><h4>Корень · radix dentis</h4>
+    <p>Часть, покрытая цементом и расположенная в зубной альвеоле. Заканчивается верхушкой <em class="lat">(apex radicis)</em> с <b>верхушечным отверстием</b> — входом для сосудов и нервов.</p></div>
+</div>
+
+<h3>Как зуб держится в челюсти</h3>
+<p>Корень фиксируется в зубной альвеоле пучками волокон периодонта. Такое соединение называется <b>гомфозом</b> (вколачиванием): зуб не срастается с костью, а подвешен на связке, которая амортизирует жевательную нагрузку.</p>
+
+<div class="callout clinic">
+  <span class="tag">Клиническая связь</span>
+  <p>Деление на анатомическую и клиническую коронку важно в пародонтологии: при рецессии десны оголяется цемент корня, который не защищён эмалью и быстрее поражается кариесом.</p>
+</div>` },
+
+    /* 3 ---------------------------------------------------------------- */
+    { id: 'surfaces', kicker: 'Раздел 1 · Анатомия', title: 'Поверхности коронки и анатомические ориентиры',
+      tocTitle: 'Поверхности и ориентиры',
+      html: `
+<p>Для описания зуба используют общие направления, привязанные к зубной дуге, а не к оси тела.</p>
+
+<div class="table-wrap"><table class="atlas">
+  <thead><tr><th>Поверхность</th><th>Латинское название</th><th>Где находится</th></tr></thead>
+  <tbody>
+    <tr><td>Вестибулярная</td><td><em>facies vestibularis</em></td><td>Обращена к преддверию рта. На передних зубах — <b>губная</b> (<em>facies labialis</em>), на боковых — <b>щёчная</b> (<em>facies buccalis</em>).</td></tr>
+    <tr><td>Оральная</td><td><em>facies lingualis / palatinalis</em></td><td>Обращена к полости рта: на нижних зубах — <b>язычная</b>, на верхних — <b>нёбная</b>.</td></tr>
+    <tr><td>Мезиальная</td><td><em>facies mesialis</em></td><td>Контактная поверхность, обращённая к срединной линии.</td></tr>
+    <tr><td>Дистальная</td><td><em>facies distalis</em></td><td>Контактная поверхность, обращённая от срединной линии к последнему зубу ряда.</td></tr>
+    <tr><td>Жевательная (окклюзионная)</td><td><em>facies occlusalis</em></td><td>Поверхность премоляров и моляров, смыкающаяся с зубами-антагонистами. У резцов и клыков — <b>режущий край</b> (<em>margo incisalis</em>).</td></tr>
+  </tbody>
+</table></div>
+
+<p>Мезиальную и дистальную поверхности называют <b>контактными</b> (апроксимальными): ими соседние зубы соприкасаются друг с другом. Место касания — <b>контактный пункт</b>; под ним расположен межзубной сосочек десны.</p>
+
+<h3>Рельеф жевательной поверхности</h3>
+<ul>
+  <li><b>Бугор</b> (<em>cuspis dentis</em>) — возвышение коронки; клык имеет один бугор, премоляры — два-три, моляры — от четырёх до пяти.</li>
+  <li><b>Фиссура</b> — естественная борозда между бугорками. Глубокие фиссуры задерживают налёт и часто поражаются кариесом.</li>
+  <li><b>Краевой валик</b> — возвышение эмали по краю жевательной или нёбной поверхности.</li>
+  <li><b>Кингулум</b> (зубной бугорок) — утолщение у шейки на оральной поверхности резцов и клыков.</li>
+</ul>` },
+
+    /* 4 ---------------------------------------------------------------- */
+    { id: 'signs', kicker: 'Раздел 1 · Анатомия', title: 'Признаки принадлежности зуба: как определить сторону',
+      tocTitle: 'Признаки зуба',
+      html: `
+<p>Определить, к какой стороне (правой или левой) принадлежит отдельный зуб, помогают три классических признака. Они особенно полезны на практических занятиях с препаратами удалённых зубов.</p>
+
+<div class="cols">
+  <div class="panel"><h4>1. Признак угла коронки</h4>
+    <p>Если смотреть на вестибулярную поверхность, угол между режущим (жевательным) краем и <b>мезиальной</b> поверхностью более острый (близок к прямому), а между краем и <b>дистальной</b> поверхностью — более тупой, закруглённый.</p></div>
+  <div class="panel"><h4>2. Признак кривизны коронки</h4>
+    <p>Вестибулярная поверхность выпуклая, но неравномерно: коронка следует изгибу зубной дуги, поэтому её дистальная часть круче загибается в сторону полости рта, чем мезиальная.</p></div>
+  <div class="panel"><h4>3. Признак корня</h4>
+    <p>Верхушка корня, как правило, отклонена в <b>дистальную</b> сторону от продольной оси коронки.</p></div>
+</div>
+
+<div class="callout">
+  <span class="tag">Алгоритм</span>
+  <p>1) Определите вестибулярную сторону (она выпуклее). 2) Поставьте зуб коронкой вверх, верхушкой вниз. 3) Найдите более острый угол коронки — это мезиальная сторона. 4) Сопоставьте с направлением отклонения корня. Зная челюсть, вы определите сторону.</p>
+</div>
+
+<p>Признаки выражены в разной степени: у боковых зубов они проявляются заметнее, чем у нижних резцов, коронки которых почти симметричны. Поэтому всегда проверяйте не один, а несколько признаков.</p>` },
+
+    /* 5 ---------------------------------------------------------------- */
+    { id: 'cavity', kicker: 'Раздел 1 · Анатомия', title: 'Полость зуба и корневые каналы',
+      tocTitle: 'Полость зуба и каналы',
+      html: `
+<p>Внутри зуба находится <b>полость зуба</b> (<em class="lat">cavitas dentis</em>), заполненная пульпой. Её форма в общих чертах повторяет внешнюю форму зуба, но она меньше.</p>
+
+<div class="cols">
+  <div class="panel"><h4>Полость коронки</h4>
+    <p>Содержит <b>коронковую пульпу</b>. Верхняя стенка — свод; под буграми зуба от него отходят <b>рога пульпы</b>. Дно полости у многокорневых зубов расположено над <b>фуркацией</b> (местом разделения корней) и содержит устья корневых каналов.</p></div>
+  <div class="panel"><h4>Корневые каналы</h4>
+    <p>Узкие каналы внутри корней, заканчивающиеся <b>верхушечным отверстием</b>. На верхушке канал нередко ветвится (<b>дельта верхушки</b>), также встречаются боковые и фуркационные дополнительные каналы.</p></div>
+</div>
+
+<h3>Число корней и каналов (типичные варианты)</h3>
+<div class="table-wrap"><table class="atlas">
+  <thead><tr><th>Зуб</th><th>Корней</th><th>Корневых каналов</th></tr></thead>
+  <tbody>
+    <tr><td>Резцы и клыки</td><td>1</td><td>обычно 1 (у нижних резцов нередко 2)</td></tr>
+    <tr><td>Верхний 1-й премоляр</td><td>2 (чаще)</td><td>2</td></tr>
+    <tr><td>Верхний 2-й премоляр</td><td>1</td><td>1, реже 2</td></tr>
+    <tr><td>Нижние премоляры</td><td>1</td><td>1</td></tr>
+    <tr><td>Верхние моляры</td><td>3</td><td>3–4 (в мезиально-щёчном корне часто есть второй канал)</td></tr>
+    <tr><td>Нижние моляры</td><td>2</td><td>3, иногда 4</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout clinic">
+  <span class="tag">Клиническая связь</span>
+  <p>При эндодонтическом лечении («лечении каналов») пропущенный дополнительный канал — одна из частых причин неудачи. Рентгеновский снимок показывает только плоскую проекцию, поэтому анатомические варианты нужно знать заранее.</p>
+</div>
+
+<p>С возрастом вторичный дентин откладывается на стенках полости, она уменьшается, а каналы сужаются.</p>` },
+
+    /* 6 ---------------------------------------------------------------- */
+    { id: 'histo-overview', kicker: 'Раздел 2 · Гистология', title: 'Ткани зуба: общая схема',
+      tocTitle: 'Ткани зуба: обзор',
+      html: `
+<p>Три ткани зуба <b>твёрдые</b> (эмаль, дентин, цемент) и одна <b>мягкая</b> — пульпа. Все они развиваются из зубного зачатка: эмаль — из эпителия (эктодермы), остальные ткани — из мезенхимы.</p>
+
+<figure>
+  <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NDAgNTIwIiBmb250LWZhbWlseT0iR2VvcmdpYSwgJ1RpbWVzIE5ldyBSb21hbicsIHNlcmlmIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idDMgZDMiPgo8dGl0bGUgaWQ9InQzIj7QodGF0LXQvNCwINCz0LjRgdGC0L7Qu9C+0LPQuNGH0LXRgdC60L7Qs9C+INGB0YLRgNC+0LXQvdC40Y8g0LfRg9Cx0LA8L3RpdGxlPgo8ZGVzYyBpZD0iZDMiPtCt0LzQsNC70Ywg0YEg0L/RgNC40LfQvNCw0LzQuCDQuCDQu9C40L3QuNGP0LzQuCDQoNC10YLRhtC40YPRgdCwLCDRhNC10YHRgtC+0L3Rh9Cw0YLQsNGPINGN0LzQsNC70LXQstC+LdC00LXQvdGC0LjQvdC90LDRjyDQs9GA0LDQvdC40YbQsCwg0LTQtdC90YLQuNC9INGBINC60LDQvdCw0LvRjNGG0LDQvNC4LCDQv9GA0LXQtNC10L3RgtC40L0sINGB0LvQvtC5INC+0LTQvtC90YLQvtCx0LvQsNGB0YLQvtCyINC4INC/0YPQu9GM0L/QsC48L2Rlc2M+CjxkZWZzPjxjbGlwUGF0aCBpZD0iY2xpcERyYXciPjxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI2MDAiIGhlaWdodD0iNTIwIi8+PC9jbGlwUGF0aD48L2RlZnM+CjxyZWN0IHdpZHRoPSI5NDAiIGhlaWdodD0iNTIwIiBmaWxsPSIjZmJmOGYxIi8+CjxnIGNsaXAtcGF0aD0idXJsKCNjbGlwRHJhdykiPgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNjAwIiBoZWlnaHQ9IjIwMCIgZmlsbD0iI2U2ZjBmNyIvPgo8cGF0aCBkPSJNIDAgMTc1IEMgNSAxMjAsIC01IDYwLCAyIDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2E5YzFkNCIgc3Ryb2tlLXdpZHRoPSIxIi8+CjxwYXRoIGQ9Ik0gMTIgMTc1IEMgNyAxMjAsIDE3IDYwLCAxNCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDI0IDE3NSBDIDI5IDEyMCwgMTkgNjAsIDI2IDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2E5YzFkNCIgc3Ryb2tlLXdpZHRoPSIxIi8+CjxwYXRoIGQ9Ik0gMzYgMTc1IEMgMzEgMTIwLCA0MSA2MCwgMzggMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYTljMWQ0IiBzdHJva2Utd2lkdGg9IjEiLz4KPHBhdGggZD0iTSA0OCAxNzUgQyA1MyAxMjAsIDQzIDYwLCA1MCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDYwIDE3NSBDIDU1IDEyMCwgNjUgNjAsIDYyIDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2E5YzFkNCIgc3Ryb2tlLXdpZHRoPSIxIi8+CjxwYXRoIGQ9Ik0gNzIgMTc1IEMgNzcgMTIwLCA2NyA2MCwgNzQgMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYTljMWQ0IiBzdHJva2Utd2lkdGg9IjEiLz4KPHBhdGggZD0iTSA4NCAxNzUgQyA3OSAxMjAsIDg5IDYwLCA4NiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDk2IDE3NSBDIDEwMSAxMjAsIDkxIDYwLCA5OCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDEwOCAxNzUgQyAxMDMgMTIwLCAxMTMgNjAsIDExMCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDEyMCAxNzUgQyAxMjUgMTIwLCAxMTUgNjAsIDEyMiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDEzMiAxNzUgQyAxMjcgMTIwLCAxMzcgNjAsIDEzNCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDE0NCAxNzUgQyAxNDkgMTIwLCAxMzkgNjAsIDE0NiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDE1NiAxNzUgQyAxNTEgMTIwLCAxNjEgNjAsIDE1OCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDE2OCAxNzUgQyAxNzMgMTIwLCAxNjMgNjAsIDE3MCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDE4MCAxNzUgQyAxNzUgMTIwLCAxODUgNjAsIDE4MiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDE5MiAxNzUgQyAxOTcgMTIwLCAxODcgNjAsIDE5NCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDIwNCAxNzUgQyAxOTkgMTIwLCAyMDkgNjAsIDIwNiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDIxNiAxNzUgQyAyMjEgMTIwLCAyMTEgNjAsIDIxOCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDIyOCAxNzUgQyAyMjMgMTIwLCAyMzMgNjAsIDIzMCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDI0MCAxNzUgQyAyNDUgMTIwLCAyMzUgNjAsIDI0MiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDI1MiAxNzUgQyAyNDcgMTIwLCAyNTcgNjAsIDI1NCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDI2NCAxNzUgQyAyNjkgMTIwLCAyNTkgNjAsIDI2NiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDI3NiAxNzUgQyAyNzEgMTIwLCAyODEgNjAsIDI3OCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDI4OCAxNzUgQyAyOTMgMTIwLCAyODMgNjAsIDI5MCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDMwMCAxNzUgQyAyOTUgMTIwLCAzMDUgNjAsIDMwMiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDMxMiAxNzUgQyAzMTcgMTIwLCAzMDcgNjAsIDMxNCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDMyNCAxNzUgQyAzMTkgMTIwLCAzMjkgNjAsIDMyNiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDMzNiAxNzUgQyAzNDEgMTIwLCAzMzEgNjAsIDMzOCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDM0OCAxNzUgQyAzNDMgMTIwLCAzNTMgNjAsIDM1MCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDM2MCAxNzUgQyAzNjUgMTIwLCAzNTUgNjAsIDM2MiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDM3MiAxNzUgQyAzNjcgMTIwLCAzNzcgNjAsIDM3NCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDM4NCAxNzUgQyAzODkgMTIwLCAzNzkgNjAsIDM4NiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDM5NiAxNzUgQyAzOTEgMTIwLCA0MDEgNjAsIDM5OCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDQwOCAxNzUgQyA0MTMgMTIwLCA0MDMgNjAsIDQxMCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDQyMCAxNzUgQyA0MTUgMTIwLCA0MjUgNjAsIDQyMiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDQzMiAxNzUgQyA0MzcgMTIwLCA0MjcgNjAsIDQzNCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDQ0NCAxNzUgQyA0MzkgMTIwLCA0NDkgNjAsIDQ0NiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDQ1NiAxNzUgQyA0NjEgMTIwLCA0NTEgNjAsIDQ1OCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDQ2OCAxNzUgQyA0NjMgMTIwLCA0NzMgNjAsIDQ3MCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDQ4MCAxNzUgQyA0ODUgMTIwLCA0NzUgNjAsIDQ4MiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDQ5MiAxNzUgQyA0ODcgMTIwLCA0OTcgNjAsIDQ5NCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDUwNCAxNzUgQyA1MDkgMTIwLCA0OTkgNjAsIDUwNiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDUxNiAxNzUgQyA1MTEgMTIwLCA1MjEgNjAsIDUxOCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDUyOCAxNzUgQyA1MzMgMTIwLCA1MjMgNjAsIDUzMCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDU0MCAxNzUgQyA1MzUgMTIwLCA1NDUgNjAsIDU0MiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDU1MiAxNzUgQyA1NTcgMTIwLCA1NDcgNjAsIDU1NCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDU2NCAxNzUgQyA1NTkgMTIwLCA1NjkgNjAsIDU2NiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDU3NiAxNzUgQyA1ODEgMTIwLCA1NzEgNjAsIDU3OCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDU4OCAxNzUgQyA1ODMgMTIwLCA1OTMgNjAsIDU5MCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDYwMCAxNzUgQyA2MDUgMTIwLCA1OTUgNjAsIDYwMiAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDYxMiAxNzUgQyA2MDcgMTIwLCA2MTcgNjAsIDYxNCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNhOWMxZDQiIHN0cm9rZS13aWR0aD0iMSIvPgo8cGF0aCBkPSJNIDYwIDE2OCBDIDEzMCAxNDAsIDIwMCA4MCwgMjQwIDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzZmOGZhOCIgc3Ryb2tlLXdpZHRoPSIyIiBvcGFjaXR5PSIwLjgiLz4KPHBhdGggZD0iTSAyMjAgMTY4IEMgMjkwIDE0MCwgMzYwIDgwLCA0MDAgMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNmY4ZmE4IiBzdHJva2Utd2lkdGg9IjIiIG9wYWNpdHk9IjAuOCIvPgo8cGF0aCBkPSJNIDM4MCAxNjggQyA0NTAgMTQwLCA1MjAgODAsIDU2MCAwIiBmaWxsPSJub25lIiBzdHJva2U9IiM2ZjhmYTgiIHN0cm9rZS13aWR0aD0iMiIgb3BhY2l0eT0iMC44Ii8+CjxwYXRoIGQ9Ik0gMCAxNzAgUSAyMCAxNDIgNDAgMTcwIFEgNjAgMTQyIDgwIDE3MCBRIDEwMCAxNDIgMTIwIDE3MCBRIDE0MCAxNDIgMTYwIDE3MCBRIDE4MCAxNDIgMjAwIDE3MCBRIDIyMCAxNDIgMjQwIDE3MCBRIDI2MCAxNDIgMjgwIDE3MCBRIDMwMCAxNDIgMzIwIDE3MCBRIDM0MCAxNDIgMzYwIDE3MCBRIDM4MCAxNDIgNDAwIDE3MCBRIDQyMCAxNDIgNDQwIDE3MCBRIDQ2MCAxNDIgNDgwIDE3MCBRIDUwMCAxNDIgNTIwIDE3MCBRIDU0MCAxNDIgNTYwIDE3MCBRIDU4MCAxNDIgNjAwIDE3MCBMIDYwMCAzODUgTCAwIDM4NSBaIiBmaWxsPSIjZjJlM2I4IiBzdHJva2U9IiM4YzZkM2EiIHN0cm9rZS13aWR0aD0iMiIvPgo8cmVjdCB4PSIwIiB5PSIzODUiIHdpZHRoPSI2MDAiIGhlaWdodD0iMTciIGZpbGw9IiNmOGVmZDMiLz4KPHBhdGggZD0iTSA5IDE2MiBDIDE3IDI0MCwgMSAzMjAsIDkgNDAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNiMDhkNTciIHN0cm9rZS13aWR0aD0iMS4zIi8+CjxwYXRoIGQ9Ik0gMjcgMTYyIEMgMTkgMjQwLCAzNSAzMjAsIDI3IDQwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjA4ZDU3IiBzdHJva2Utd2lkdGg9IjEuMyIvPgo8cGF0aCBkPSJNIDQ1IDE2MiBDIDUzIDI0MCwgMzcgMzIwLCA0NSA0MDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2IwOGQ1NyIgc3Ryb2tlLXdpZHRoPSIxLjMiLz4KPHBhdGggZD0iTSA2MyAxNjIgQyA1NSAyNDAsIDcxIDMyMCwgNjMgNDAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNiMDhkNTciIHN0cm9rZS13aWR0aD0iMS4zIi8+CjxwYXRoIGQ9Ik0gODEgMTYyIEMgODkgMjQwLCA3MyAzMjAsIDgxIDQwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjA4ZDU3IiBzdHJva2Utd2lkdGg9IjEuMyIvPgo8cGF0aCBkPSJNIDk5IDE2MiBDIDkxIDI0MCwgMTA3IDMyMCwgOTkgNDAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNiMDhkNTciIHN0cm9rZS13aWR0aD0iMS4zIi8+CjxwYXRoIGQ9Ik0gMTE3IDE2MiBDIDEyNSAyNDAsIDEwOSAzMjAsIDExNyA0MDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2IwOGQ1NyIgc3Ryb2tlLXdpZHRoPSIxLjMiLz4KPHBhdGggZD0iTSAxMzUgMTYyIEMgMTI3IDI0MCwgMTQzIDMyMCwgMTM1IDQwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjA4ZDU3IiBzdHJva2Utd2lkdGg9IjEuMyIvPgo8cGF0aCBkPSJNIDE1MyAxNjIgQyAxNjEgMjQwLCAxNDUgMzIwLCAxNTMgNDAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNiMDhkNTciIHN0cm9rZS13aWR0aD0iMS4zIi8+CjxwYXRoIGQ9Ik0gMTcxIDE2MiBDIDE2MyAyNDAsIDE3OSAzMjAsIDE3MSA0MDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2IwOGQ1NyIgc3Ryb2tlLXdpZHRoPSIxLjMiLz4KPHBhdGggZD0iTSAxODkgMTYyIEMgMTk3IDI0MCwgMTgxIDMyMCwgMTg5IDQwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjA4ZDU3IiBzdHJva2Utd2lkdGg9IjEuMyIvPgo8cGF0aCBkPSJNIDIwNyAxNjIgQyAxOTkgMjQwLCAyMTUgMzIwLCAyMDcgNDAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNiMDhkNTciIHN0cm9rZS13aWR0aD0iMS4zIi8+CjxwYXRoIGQ9Ik0gMjI1IDE2MiBDIDIzMyAyNDAsIDIxNyAzMjAsIDIyNSA0MDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2IwOGQ1NyIgc3Ryb2tlLXdpZHRoPSIxLjMiLz4KPHBhdGggZD0iTSAyNDMgMTYyIEMgMjM1IDI0MCwgMjUxIDMyMCwgMjQzIDQwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjA4ZDU3IiBzdHJva2Utd2lkdGg9IjEuMyIvPgo8cGF0aCBkPSJNIDI2MSAxNjIgQyAyNjkgMjQwLCAyNTMgMzIwLCAyNjEgNDAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNiMDhkNTciIHN0cm9rZS13aWR0aD0iMS4zIi8+CjxwYXRoIGQ9Ik0gMjc5IDE2MiBDIDI3MSAyNDAsIDI4NyAzMjAsIDI3OSA0MDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2IwOGQ1NyIgc3Ryb2tlLXdpZHRoPSIxLjMiLz4KPHBhdGggZD0iTSAyOTcgMTYyIEMgMzA1IDI0MCwgMjg5IDMyMCwgMjk3IDQwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjA4ZDU3IiBzdHJva2Utd2lkdGg9IjEuMyIvPgo8cGF0aCBkPSJNIDMxNSAxNjIgQyAzMDcgMjQwLCAzMjMgMzIwLCAzMTUgNDAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNiMDhkNTciIHN0cm9rZS13aWR0aD0iMS4zIi8+CjxwYXRoIGQ9Ik0gMzMzIDE2MiBDIDM0MSAyNDAsIDMyNSAzMjAsIDMzMyA0MDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2IwOGQ1NyIgc3Ryb2tlLXdpZHRoPSIxLjMiLz4KPHBhdGggZD0iTSAzNTEgMTYyIEMgMzQzIDI0MCwgMzU5IDMyMCwgMzUxIDQwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjA4ZDU3IiBzdHJva2Utd2lkdGg9IjEuMyIvPgo8cGF0aCBkPSJNIDM2OSAxNjIgQyAzNzcgMjQwLCAzNjEgMzIwLCAzNjkgNDAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNiMDhkNTciIHN0cm9rZS13aWR0aD0iMS4zIi8+CjxwYXRoIGQ9Ik0gMzg3IDE2MiBDIDM3OSAyNDAsIDM5NSAzMjAsIDM4NyA0MDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2IwOGQ1NyIgc3Ryb2tlLXdpZHRoPSIxLjMiLz4KPHBhdGggZD0iTSA0MDUgMTYyIEMgNDEzIDI0MCwgMzk3IDMyMCwgNDA1IDQwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjA4ZDU3IiBzdHJva2Utd2lkdGg9IjEuMyIvPgo8cGF0aCBkPSJNIDQyMyAxNjIgQyA0MTUgMjQwLCA0MzEgMzIwLCA0MjMgNDAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNiMDhkNTciIHN0cm9rZS13aWR0aD0iMS4zIi8+CjxwYXRoIGQ9Ik0gNDQxIDE2MiBDIDQ0OSAyNDAsIDQzMyAzMjAsIDQ0MSA0MDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2IwOGQ1NyIgc3Ryb2tlLXdpZHRoPSIxLjMiLz4KPHBhdGggZD0iTSA0NTkgMTYyIEMgNDUxIDI0MCwgNDY3IDMyMCwgNDU5IDQwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjA4ZDU3IiBzdHJva2Utd2lkdGg9IjEuMyIvPgo8cGF0aCBkPSJNIDQ3NyAxNjIgQyA0ODUgMjQwLCA0NjkgMzIwLCA0NzcgNDAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNiMDhkNTciIHN0cm9rZS13aWR0aD0iMS4zIi8+CjxwYXRoIGQ9Ik0gNDk1IDE2MiBDIDQ4NyAyNDAsIDUwMyAzMjAsIDQ5NSA0MDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2IwOGQ1NyIgc3Ryb2tlLXdpZHRoPSIxLjMiLz4KPHBhdGggZD0iTSA1MTMgMTYyIEMgNTIxIDI0MCwgNTA1IDMyMCwgNTEzIDQwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjA4ZDU3IiBzdHJva2Utd2lkdGg9IjEuMyIvPgo8cGF0aCBkPSJNIDUzMSAxNjIgQyA1MjMgMjQwLCA1MzkgMzIwLCA1MzEgNDAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNiMDhkNTciIHN0cm9rZS13aWR0aD0iMS4zIi8+CjxwYXRoIGQ9Ik0gNTQ5IDE2MiBDIDU1NyAyNDAsIDU0MSAzMjAsIDU0OSA0MDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2IwOGQ1NyIgc3Ryb2tlLXdpZHRoPSIxLjMiLz4KPHBhdGggZD0iTSA1NjcgMTYyIEMgNTU5IDI0MCwgNTc1IDMyMCwgNTY3IDQwMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYjA4ZDU3IiBzdHJva2Utd2lkdGg9IjEuMyIvPgo8cGF0aCBkPSJNIDU4NSAxNjIgQyA1OTMgMjQwLCA1NzcgMzIwLCA1ODUgNDAwIiBmaWxsPSJub25lIiBzdHJva2U9IiNiMDhkNTciIHN0cm9rZS13aWR0aD0iMS4zIi8+CjxyZWN0IHg9IjAiIHk9IjQwMCIgd2lkdGg9IjYwMCIgaGVpZ2h0PSIzMiIgZmlsbD0iI2U3YjliZiIvPgo8ZWxsaXBzZSBjeD0iOSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iOSIgY3k9IjQxOCIgcj0iMi42IiBmaWxsPSIjNmQyZjNkIi8+CjxlbGxpcHNlIGN4PSIyNyIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMjciIGN5PSI0MTgiIHI9IjIuNiIgZmlsbD0iIzZkMmYzZCIvPgo8ZWxsaXBzZSBjeD0iNDUiIGN5PSI0MTYiIHJ4PSI3IiByeT0iMTQiIGZpbGw9IiNjZjhhOTUiIHN0cm9rZT0iIzhjNGI1NyIgc3Ryb2tlLXdpZHRoPSIxIi8+CjxjaXJjbGUgY3g9IjQ1IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjYzIiBjeT0iNDE2IiByeD0iNyIgcnk9IjE0IiBmaWxsPSIjY2Y4YTk1IiBzdHJva2U9IiM4YzRiNTciIHN0cm9rZS13aWR0aD0iMSIvPgo8Y2lyY2xlIGN4PSI2MyIgY3k9IjQxOCIgcj0iMi42IiBmaWxsPSIjNmQyZjNkIi8+CjxlbGxpcHNlIGN4PSI4MSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iODEiIGN5PSI0MTgiIHI9IjIuNiIgZmlsbD0iIzZkMmYzZCIvPgo8ZWxsaXBzZSBjeD0iOTkiIGN5PSI0MTYiIHJ4PSI3IiByeT0iMTQiIGZpbGw9IiNjZjhhOTUiIHN0cm9rZT0iIzhjNGI1NyIgc3Ryb2tlLXdpZHRoPSIxIi8+CjxjaXJjbGUgY3g9Ijk5IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjExNyIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMTE3IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjEzNSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMTM1IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjE1MyIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMTUzIiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjE3MSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMTcxIiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjE4OSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMTg5IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjIwNyIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMjA3IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjIyNSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMjI1IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjI0MyIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMjQzIiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjI2MSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMjYxIiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjI3OSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMjc5IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjI5NyIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMjk3IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjMxNSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMzE1IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjMzMyIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMzMzIiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjM1MSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMzUxIiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjM2OSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMzY5IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjM4NyIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iMzg3IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjQwNSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iNDA1IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjQyMyIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iNDIzIiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjQ0MSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iNDQxIiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjQ1OSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iNDU5IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjQ3NyIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iNDc3IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjQ5NSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iNDk1IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjUxMyIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iNTEzIiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjUzMSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iNTMxIiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjU0OSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iNTQ5IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjU2NyIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iNTY3IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjU4NSIgY3k9IjQxNiIgcng9IjciIHJ5PSIxNCIgZmlsbD0iI2NmOGE5NSIgc3Ryb2tlPSIjOGM0YjU3IiBzdHJva2Utd2lkdGg9IjEiLz4KPGNpcmNsZSBjeD0iNTg1IiBjeT0iNDE4IiByPSIyLjYiIGZpbGw9IiM2ZDJmM2QiLz4KPHJlY3QgeD0iMCIgeT0iNDMyIiB3aWR0aD0iNjAwIiBoZWlnaHQ9Ijg4IiBmaWxsPSIjZjZkMGQwIi8+CjxlbGxpcHNlIGN4PSI0MCIgY3k9IjQ1MCIgcng9IjkiIHJ5PSI2IiBmaWxsPSIjZTlhNGFkIiBzdHJva2U9IiNhNDViNjYiLz4KPGNpcmNsZSBjeD0iNDAiIGN5PSI0NTAiIHI9IjIiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9Ijk1IiBjeT0iNDgwIiByeD0iOSIgcnk9IjYiIGZpbGw9IiNlOWE0YWQiIHN0cm9rZT0iI2E0NWI2NiIvPgo8Y2lyY2xlIGN4PSI5NSIgY3k9IjQ4MCIgcj0iMiIgZmlsbD0iIzZkMmYzZCIvPgo8ZWxsaXBzZSBjeD0iMTUwIiBjeT0iNDU1IiByeD0iOSIgcnk9IjYiIGZpbGw9IiNlOWE0YWQiIHN0cm9rZT0iI2E0NWI2NiIvPgo8Y2lyY2xlIGN4PSIxNTAiIGN5PSI0NTUiIHI9IjIiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjIzMCIgY3k9IjQ5MCIgcng9IjkiIHJ5PSI2IiBmaWxsPSIjZTlhNGFkIiBzdHJva2U9IiNhNDViNjYiLz4KPGNpcmNsZSBjeD0iMjMwIiBjeT0iNDkwIiByPSIyIiBmaWxsPSIjNmQyZjNkIi8+CjxlbGxpcHNlIGN4PSIzMDAiIGN5PSI0NTgiIHJ4PSI5IiByeT0iNiIgZmlsbD0iI2U5YTRhZCIgc3Ryb2tlPSIjYTQ1YjY2Ii8+CjxjaXJjbGUgY3g9IjMwMCIgY3k9IjQ1OCIgcj0iMiIgZmlsbD0iIzZkMmYzZCIvPgo8ZWxsaXBzZSBjeD0iMzcwIiBjeT0iNDgyIiByeD0iOSIgcnk9IjYiIGZpbGw9IiNlOWE0YWQiIHN0cm9rZT0iI2E0NWI2NiIvPgo8Y2lyY2xlIGN4PSIzNzAiIGN5PSI0ODIiIHI9IjIiIGZpbGw9IiM2ZDJmM2QiLz4KPGVsbGlwc2UgY3g9IjQzMCIgY3k9IjQ1MiIgcng9IjkiIHJ5PSI2IiBmaWxsPSIjZTlhNGFkIiBzdHJva2U9IiNhNDViNjYiLz4KPGNpcmNsZSBjeD0iNDMwIiBjeT0iNDUyIiByPSIyIiBmaWxsPSIjNmQyZjNkIi8+CjxlbGxpcHNlIGN4PSI1NjAiIGN5PSI0NzAiIHJ4PSI5IiByeT0iNiIgZmlsbD0iI2U5YTRhZCIgc3Ryb2tlPSIjYTQ1YjY2Ii8+CjxjaXJjbGUgY3g9IjU2MCIgY3k9IjQ3MCIgcj0iMiIgZmlsbD0iIzZkMmYzZCIvPgo8ZWxsaXBzZSBjeD0iNTkwIiBjeT0iNDk3IiByeD0iOSIgcnk9IjYiIGZpbGw9IiNlOWE0YWQiIHN0cm9rZT0iI2E0NWI2NiIvPgo8Y2lyY2xlIGN4PSI1OTAiIGN5PSI0OTciIHI9IjIiIGZpbGw9IiM2ZDJmM2QiLz4KPGNpcmNsZSBjeD0iNTAwIiBjeT0iNDc4IiByPSIxNSIgZmlsbD0iI2MwMzkyYiIgc3Ryb2tlPSIjN2IyNDFjIiBzdHJva2Utd2lkdGg9IjIiLz4KPGNpcmNsZSBjeD0iNTAwIiBjeT0iNDc4IiByPSI3IiBmaWxsPSIjZjViN2IxIi8+CjxwYXRoIGQ9Ik0gMjgwIDUyMCBDIDMwMCA1MDAsIDMzMCA0OTAsIDM2MCA0OTUgUyA0MjAgNDg1LCA0NTAgNDcwIiBmaWxsPSJub25lIiBzdHJva2U9IiNkNGEwMTciIHN0cm9rZS13aWR0aD0iMyIvPgo8L2c+CjxnIHN0cm9rZT0iIzFiMmE0MSIgc3Ryb2tlLXdpZHRoPSIxLjIiIGZpbGw9Im5vbmUiPgo8bGluZSB4MT0iNjE3IiB5MT0iMzUiIHgyPSI1MDAiIHkyPSI0MCIvPgo8bGluZSB4MT0iNjE3IiB5MT0iOTUiIHgyPSI0ODEiIHkyPSIxMDQiLz4KPGxpbmUgeDE9IjYxNyIgeTE9IjE2NSIgeDI9IjU2MCIgeTI9IjE3MCIvPgo8bGluZSB4MT0iNjE3IiB5MT0iMjY1IiB4Mj0iNTA1IiB5Mj0iMjcwIi8+CjxsaW5lIHgxPSI2MTciIHkxPSIzNjciIHgyPSI1NzAiIHkyPSIzOTIiLz4KPGxpbmUgeDE9IjYxNyIgeTE9IjQxMyIgeDI9IjU1OCIgeTI9IjQxOCIvPgo8bGluZSB4MT0iNjE3IiB5MT0iNDgwIiB4Mj0iNTA4IiB5Mj0iNDgwIi8+CjwvZz48ZyBmaWxsPSIjMWIyYTQxIj4KPGNpcmNsZSBjeD0iNTAwIiBjeT0iNDAiIHI9IjMiLz4KPGNpcmNsZSBjeD0iNDgxIiBjeT0iMTA0IiByPSIzIi8+CjxjaXJjbGUgY3g9IjU2MCIgY3k9IjE3MCIgcj0iMyIvPgo8Y2lyY2xlIGN4PSI1MDUiIGN5PSIyNzAiIHI9IjMiLz4KPGNpcmNsZSBjeD0iNTcwIiBjeT0iMzkyIiByPSIzIi8+CjxjaXJjbGUgY3g9IjU1OCIgY3k9IjQxOCIgcj0iMyIvPgo8Y2lyY2xlIGN4PSI1MDgiIGN5PSI0ODAiIHI9IjMiLz4KPC9nPgo8ZyBmb250LXNpemU9IjE2IiBmaWxsPSIjMWIyYTQxIj4KPHRleHQgeD0iNjI1IiB5PSI0MCI+0K3QvNCw0LvRjDog0Y3QvNCw0LvQtdCy0YvQtSDQv9GA0LjQt9C80YsgKDTigJM2INC80LrQvCk8L3RleHQ+Cjx0ZXh0IHg9IjYyNSIgeT0iMTAwIj7Qm9C40L3QuNC4INCg0LXRgtGG0LjRg9GB0LAgKNGA0L7RgdGC0L7QstGL0LUg0LvQuNC90LjQuCk8L3RleHQ+Cjx0ZXh0IHg9IjYyNSIgeT0iMTcwIj7QrdC80LDQu9C10LLQvi3QtNC10L3RgtC40L3QvdCw0Y8g0LPRgNCw0L3QuNGG0LAgKNGE0LXRgdGC0L7QvdGH0LDRgtCw0Y8pPC90ZXh0Pgo8dGV4dCB4PSI2MjUiIHk9IjI3MCI+0JTQtdC90YLQuNC9OiDQtNC10L3RgtC40L3QvdGL0LUg0LrQsNC90LDQu9GM0YbRizwvdGV4dD4KPHRleHQgeD0iNjI1IiB5PSIzNzIiPtCf0YDQtdC00LXQvdGC0LjQvSAo0L3QtdC+0LHRi9C30LLQtdGB0YLQstC70ZHQvdC90YvQuSk8L3RleHQ+Cjx0ZXh0IHg9IjYyNSIgeT0iNDE4Ij7QodC70L7QuSDQvtC00L7QvdGC0L7QsdC70LDRgdGC0L7QsjwvdGV4dD4KPHRleHQgeD0iNjI1IiB5PSI0ODUiPtCf0YPQu9GM0L/QsDog0YHQvtGB0YPQtNGLLCDQvdC10YDQstGLLCDQutC70LXRgtC60Lg8L3RleHQ+CjwvZz4KPHRleHQgeD0iMjAiIHk9IjUxMiIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzZiNzI4MCIgZm9udC1zdHlsZT0iaXRhbGljIiBzdHJva2U9IiNmYmY4ZjEiIHN0cm9rZS13aWR0aD0iNCIgcGFpbnQtb3JkZXI9InN0cm9rZSI+0KHRhdC10LzQsCwg0L3QtSDQsiDQvNCw0YHRiNGC0LDQsdC1LiDQkNCy0YLQvtGA0YHQutCw0Y8g0LjQu9C70Y7RgdGC0YDQsNGG0LjRjyDQv9GA0L7QtdC60YLQsC48L3RleHQ+Cjwvc3ZnPg==" alt="Схема гистологического строения: эмаль с призмами, эмалево-дентинная граница, дентин с канальцами, предентин, одонтобласты и пульпа">
+  <figcaption><b>Рис. 2.</b> Гистологическая схема коронки: от поверхности эмали к пульпе. Масштаб условный.</figcaption>
+</figure>
+
+<div class="table-wrap"><table class="atlas">
+  <thead><tr><th>Ткань</th><th>Неорганические вещества</th><th>Органические вещества</th><th>Вода</th><th>Клетки</th></tr></thead>
+  <tbody>
+    <tr><td>Эмаль</td><td>≈ 95–96 %</td><td>≈ 1 %</td><td>≈ 3–4 %</td><td>нет (после формирования)</td></tr>
+    <tr><td>Дентин</td><td>≈ 70 %</td><td>≈ 20 %</td><td>≈ 10 %</td><td>тела одонтобластов лежат в пульпе, отростки — в канальцах</td></tr>
+    <tr><td>Цемент</td><td>≈ 45–65 % (по разным источникам)</td><td>≈ 20–25 %</td><td>≈ 12 %</td><td>цементоциты (в клеточном цементе)</td></tr>
+    <tr><td>Пульпа</td><td>—</td><td>рыхлая соединительная ткань</td><td>≈ 75 %</td><td>одонтобласты, фибробласты, камбиальные клетки и др.</td></tr>
+  </tbody>
+</table></div>
+<p class="sources">Значения приблизительные: в разных руководствах они различаются на несколько процентов и зависят от возраста и участка зуба.</p>
+
+<div class="callout">
+  <span class="tag">Запомните</span>
+  <p>Чем выше минерализация, тем твёрже ткань и тем меньше она способна к восстановлению: эмаль самая твёрдая, но клеток в ней нет, поэтому утраченную эмаль организм не регенерирует.</p>
+</div>` },
+
+    /* 7 ---------------------------------------------------------------- */
+    { id: 'enamel', kicker: 'Раздел 2 · Гистология', title: 'Эмаль (enamelum)',
+      tocTitle: 'Эмаль',
+      html: `
+<p class="lead">Эмаль покрывает анатомическую коронку и является самой минерализованной тканью организма. Она формируется амелобластами; после прорезывания зуба эти клетки исчезают, и эмаль остаётся <b>бесклеточной</b>.</p>
+
+<div class="cols">
+  <div class="panel"><h4>Состав и свойства</h4>
+    <ul>
+      <li>Основа — кристаллы <b>гидроксиапатита</b> Ca<sub>10</sub>(PO<sub>4</sub>)<sub>6</sub>(OH)<sub>2</sub>.</li>
+      <li>Твёрдость около 5 по шкале Мооса.</li>
+      <li>Толщина до 2–2,5 мм на буграх, к шейке — тонкий слой.</li>
+      <li>Прозрачна; цвет зуба определяется просвечивающим дентином.</li>
+    </ul></div>
+  <div class="panel"><h4>Основная структурная единица</h4>
+    <p><b>Эмалевая призма</b> (эмалевый стержень) — столбик диаметром около 4–6 мкм, идущий от эмалево-дентинной границы к поверхности. Ход призм волнообразный, S-образный. Промежутки между призмами заполнены межпризменным веществом.</p></div>
+</div>
+
+<h3>Структуры, которые видно на шлифах</h3>
+<div class="table-wrap"><table class="atlas">
+  <thead><tr><th>Структура</th><th>Что это</th></tr></thead>
+  <tbody>
+    <tr><td>Полосы Гунтера–Шрегера</td><td>Чередующиеся светлые и тёмные полосы на продольном шлифе. Возникают из-за изменения направления хода групп призм (оптический эффект). Начинаются у эмалево-дентинной границы и не доходят до поверхности.</td></tr>
+    <tr><td>Линии Ретциуса</td><td>Ростовые (инкрементные) линии, отражающие слоистое откладывание эмали при формировании коронки. Идут косо и почти параллельно поверхности; на поверхности им соответствуют <b>перикиматы</b> — поперечные валики.</td></tr>
+    <tr><td>Эмалевые пучки</td><td>Участки пониженной минерализации у эмалево-дентинной границы, растущие в толщу эмали.</td></tr>
+    <tr><td>Эмалевые веретёна</td><td>Короткие окончания отростков одонтобластов, прошедшие через границу в эмаль.</td></tr>
+    <tr><td>Эмалевые пластинки</td><td>Узкие щелевидные дефекты минерализации, проходящие через всю толщу эмали.</td></tr>
+    <tr><td>Кутикула Насмита</td><td>Тонкая оболочка на поверхности только что прорезавшегося зуба; быстро стирается.</td></tr>
+  </tbody>
+</table></div>
+
+<p>Граница с дентином — <b>эмалево-дентинная граница</b> — имеет фестончатый вид (выпуклости эмали входят в дентин), что прочнее сцепляет ткани.</p>
+
+<div class="callout clinic">
+  <span class="tag">Клиническая связь</span>
+  <p>Фтор встраивается в кристаллы и образует фторапатит, более устойчивый к кислотам. Протравливание эмали фосфорной кислотой перед пломбированием создаёт микрорельеф для адгезии материала.</p>
+</div>` },
+
+    /* 8 ---------------------------------------------------------------- */
+    { id: 'dentin', kicker: 'Раздел 2 · Гистология', title: 'Дентин (dentinum)',
+      tocTitle: 'Дентин',
+      html: `
+<p class="lead">Дентин составляет основную массу зуба и образует стенки полости. Он покрыт эмалью в области коронки и цементом в области корня. Дентин минерализован слабее эмали, зато содержит больше органического вещества — главным образом коллагена I типа, поэтому он упруже и амортизирует нагрузку.</p>
+
+<h3>Дентинные канальцы и одонтобласты</h3>
+<p>Дентин пронизан множеством <b>дентинных канальцев</b>, идущих от пульпы к периферии. В них лежат отростки <b>одонтобластов</b> (волокна Томса); тела этих клеток образуют слой на границе дентина и пульпы. Диаметр канальца около 2–4 мкм у пульпы и примерно 1 мкм вблизи эмалево-дентинной границы; плотность канальцев выше у пульпы.</p>
+
+<div class="cols">
+  <div class="panel"><h4>Участки дентина</h4>
+    <ul>
+      <li><b>Плащевой дентин</b> — наружный слой под эмалью или цементом.</li>
+      <li><b>Околопульпарный дентин</b> — основная масса.</li>
+      <li><b>Предентин</b> — узкая необызвествлённая зона у пульпы, где идёт отложение нового матрикса.</li>
+    </ul></div>
+  <div class="panel"><h4>Структуры самого дентина</h4>
+    <ul>
+      <li><b>Перитубулярный</b> дентин — высокоминерализованная стенка канальца.</li>
+      <li><b>Интертубулярный</b> дентин — вещество между канальцами.</li>
+      <li><b>Интерглобулярный дентин</b> (пространства Чермака) — участки, где глобулы не слились.</li>
+      <li><b>Зернистый слой Томса</b> — зона у границы с цементом в корне.</li>
+    </ul></div>
+</div>
+
+<h3>Виды дентина по времени образования</h3>
+<div class="table-wrap"><table class="atlas">
+  <thead><tr><th>Вид</th><th>Когда образуется</th></tr></thead>
+  <tbody>
+    <tr><td>Первичный</td><td>До завершения формирования корня.</td></tr>
+    <tr><td>Вторичный</td><td>Всю жизнь, медленно, после завершения корня; уменьшает объём полости.</td></tr>
+    <tr><td>Третичный (репаративный)</td><td>Как ответ на раздражение — кариес, стирание, препарирование.</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout clinic">
+  <span class="tag">Клиническая связь</span>
+  <p>Если дентин обнажён, жидкость в канальцах реагирует на холод и воздух, а механорецепторы пульпы дают боль — это объясняет гидродинамическая теория чувствительности дентина.</p>
+</div>` },
+
+    /* 9 ---------------------------------------------------------------- */
+    { id: 'pulp', kicker: 'Раздел 2 · Гистология', title: 'Пульпа зуба (pulpa dentis)',
+      tocTitle: 'Пульпа',
+      html: `
+<p class="lead">Пульпа — рыхлая волокнистая соединительная ткань, заполняющая полость зуба. Она содержит сосуды, нервы, клетки и межклеточное вещество. Через верхушечное отверстие в пульпу входят артериолы и нервные волокна, а выходят вены и лимфатические сосуды.</p>
+
+<h3>Слои пульпы (от дентина к центру)</h3>
+<ol>
+  <li><b>Одонтобластический слой</b> — тела одонтобластов, образующих дентин.</li>
+  <li><b>Бесклеточная зона Вейля</b> — слой с нервным сплетением Рашкова и капиллярами (выражена в коронковой пульпе).</li>
+  <li><b>Зона богатая клетками</b> — фибробласты и камбиальные (недифференцированные) клетки.</li>
+  <li><b>Центральная зона</b> — крупные сосуды и нервные стволы.</li>
+</ol>
+
+<h3>Клетки</h3>
+<ul>
+  <li><b>Одонтобласты</b> — образуют дентин.</li>
+  <li><b>Фибробласты</b> — основные клетки: синтезируют коллаген и основное вещество.</li>
+  <li><b>Недифференцированные мезенхимные клетки</b> — резерв для обновления одонтобластов и фибробластов.</li>
+  <li><b>Макрофаги и дендритные клетки</b> — защитная функция.</li>
+</ul>
+
+<h3>Функции пульпы</h3>
+<div class="cols">
+  <div class="panel"><h4>Образовательная</h4><p>Формирование дентина в течение жизни.</p></div>
+  <div class="panel"><h4>Питательная</h4><p>Снабжение дентина через сосуды и тканевую жидкость.</p></div>
+  <div class="panel"><h4>Чувствительная</h4><p>Любое сильное раздражение вызывает боль — других ощущений пульпа почти не даёт.</p></div>
+  <div class="panel"><h4>Защитная</h4><p>Образование третичного дентина и воспалительный ответ.</p></div>
+</div>
+
+<div class="callout clinic">
+  <span class="tag">Клиническая связь</span>
+  <p>Пульпа заключена в твёрдые стенки, поэтому при воспалении (пульпите) отёк повышает давление в замкнутой полости и вызывает сильную боль. Из-за единственного узкого входа через верхушку кровоснабжение пульпы слабо компенсируется при повреждении.</p>
+</div>` },
+
+    /* 10 --------------------------------------------------------------- */
+    { id: 'cementum', kicker: 'Раздел 2 · Гистология', title: 'Цемент и периодонт',
+      tocTitle: 'Цемент и периодонт',
+      html: `
+<p class="lead">Цемент (<em class="lat">cementum</em>) — тонкий слой минерализованной ткани, покрывающий дентин корня. Он по строению близок к грубоволокнистой кости, но сосудов не имеет. Цемент прикрепляет к зубу коллагеновые волокна периодонта (волокна Шарпея).</p>
+
+<div class="table-wrap"><table class="atlas">
+  <thead><tr><th>Тип цемента</th><th>Где расположен</th><th>Особенности</th></tr></thead>
+  <tbody>
+    <tr><td>Бесклеточный (первичный)</td><td>Шеечная часть корня, около двух третей его длины</td><td>Образуется первым, клеток нет, тонкий (20–50 мкм).</td></tr>
+    <tr><td>Клеточный (вторичный)</td><td>Верхушечная треть корня и область фуркации</td><td>Содержит <b>цементоциты</b> в лакунах; толще, откладывается в течение жизни.</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Эмалево-цементная граница</h3>
+<p>Встреча эмали и цемента у шейки может быть трёх вариантов: цемент <b>перекрывает</b> эмаль (чаще всего, около 60 %), <b>встык</b> (около 30 %) или остаётся <b>щель</b>, где обнажается дентин (около 10 %). Последний вариант объясняет повышенную чувствительность шеек у части людей.</p>
+
+<h3>Периодонт — аппарат прикрепления зуба</h3>
+<p>Зуб удерживает не только цемент, а комплекс тканей — <b>периодонт</b> (пародонт в широком смысле):</p>
+<ul>
+  <li><b>Периодонтальная связка</b> — пучки коллагеновых волокон шириной около 0,15–0,4 мм между цементом и костью лунки.</li>
+  <li><b>Альвеолярная кость</b> — стенка лунки (на рентгенограмме видна как компактная пластинка).</li>
+  <li><b>Десна</b> — слизистая оболочка, окружающая шейку.</li>
+</ul>
+<p>Связка выполняет опорную, амортизирующую, чувствительную (давление и положение зуба), питательную и образовательную функции.</p>
+
+<div class="callout clinic">
+  <span class="tag">Клиническая связь</span>
+  <p>Ортодонтическое перемещение зубов основано на перестройке кости при давлении на периодонтальную связку: с одной стороны кость рассасывается, с другой — откладывается.</p>
+</div>` },
+
+    /* 11 --------------------------------------------------------------- */
+    { id: 'groups', kicker: 'Раздел 3 · Морфология', title: 'Группы постоянных зубов',
+      tocTitle: 'Группы зубов: обзор',
+      html: `
+<p>Постоянные зубы делят на четыре группы по форме коронки и функции. Всего у взрослого 32 зуба; на каждой половине каждой челюсти — 8: два резца, клык, два премоляра и три моляра.</p>
+
+<figure>
+  <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA5NjAgNTQwIiBmb250LWZhbWlseT0iR2VvcmdpYSwgJ1RpbWVzIE5ldyBSb21hbicsIHNlcmlmIiByb2xlPSJpbWciIGFyaWEtbGFiZWxsZWRieT0idDIgZDIiPgogIDx0aXRsZSBpZD0idDIiPtCn0LXRgtGL0YDQtSDQs9GA0YPQv9C/0Ysg0L/QvtGB0YLQvtGP0L3QvdGL0YUg0LfRg9Cx0L7QsjwvdGl0bGU+CiAgPGRlc2MgaWQ9ImQyIj7QodGF0LXQvNCw0YLQuNGH0L3Ri9C1INGB0LjQu9GD0Y3RgtGLINGA0LXQt9GG0LAsINC60LvRi9C60LAsINC/0YDQtdC80L7Qu9GP0YDQsCDQuCDQvNC+0LvRj9GA0LAg0YEg0LrQvtGA0L7QvdC60L7QuSDQuCDQutC+0YDQvdGP0LzQuC48L2Rlc2M+CiAgPHJlY3Qgd2lkdGg9Ijk2MCIgaGVpZ2h0PSI1NDAiIGZpbGw9IiNmYmY4ZjEiLz4KCiAgPGcgc3Ryb2tlPSIjNmI1YTNhIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPgogICAgPCEtLSDQoNC10LfQtdGGOiDQtNC+0LvQvtGC0L7QvtCx0YDQsNC30L3QsNGPINC60L7RgNC+0L3QutCwLCDQvtC00LjQvSDQutC+0YDQtdC90YwgLS0+CiAgICA8cGF0aCBkPSJNIDgyIDE2MCBMIDE1OCAxNjAgQyAxNTAgMjYwIDEzMCAzMzAgMTIwIDM0NSBDIDExMCAzMzAgOTAgMjYwIDgyIDE2MCBaIiBmaWxsPSIjZWFkYmI4Ii8+CiAgICA8cGF0aCBkPSJNIDY4IDQ0IFEgMTIwIDMwIDE3MiA0NCBMIDE2MCAxNjAgUSAxMjAgMTcyIDgwIDE2MCBaIiBmaWxsPSIjZjdmYmZlIi8+CiAgICA8cGF0aCBkPSJNIDEwMCA3MCBRIDEyMCA2NCAxNDAgNzAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2M0ZDNkZSIvPgoKICAgIDwhLS0g0JrQu9GL0Lo6INC60L7QvdC40YfQtdGB0LrQsNGPINC60L7RgNC+0L3QutCwLCDQtNC70LjQvdC90YvQuSDQutC+0YDQtdC90YwgLS0+CiAgICA8cGF0aCBkPSJNIDI5NiAxNjggTCAzNjQgMTY4IEMgMzYwIDI4NSAzNDYgMzY1IDMzMCA0MDAgQyAzMTQgMzY1IDMwMCAyODUgMjk2IDE2OCBaIiBmaWxsPSIjZWFkYmI4Ii8+CiAgICA8cGF0aCBkPSJNIDI4MiAxMDAgTCAzMzAgMjggTCAzNzggMTAwIEwgMzY2IDE2OCBRIDMzMCAxODAgMjk0IDE2OCBaIiBmaWxsPSIjZjdmYmZlIi8+CgogICAgPCEtLSDQn9GA0LXQvNC+0LvRj9GAOiDQtNCy0LAg0LHRg9Cz0YDQsCwg0L7QtNC40L0g0LrQvtGA0LXQvdGMIC0tPgogICAgPHBhdGggZD0iTSA1MDIgMTYwIEwgNTc4IDE2MCBDIDU3NCAyNTAgNTYwIDMxMCA1NDAgMzQwIEMgNTIwIDMxMCA1MDYgMjUwIDUwMiAxNjAgWiIgZmlsbD0iI2VhZGJiOCIvPgogICAgPHBhdGggZD0iTSA0OTAgNzAgTCA1MTIgMzQgTCA1NDAgNjIgTCA1NjggMzQgTCA1OTAgNzAgTCA1ODAgMTYwIFEgNTQwIDE3MiA1MDAgMTYwIFoiIGZpbGw9IiNmN2ZiZmUiLz4KCiAgICA8IS0tINCc0L7Qu9GP0YA6INGI0LjRgNC+0LrQsNGPINC60L7RgNC+0L3QutCwLCDRgtGA0Lgg0LrQvtGA0L3RjyAo0LLQtdGA0YXQvdC40LkpIC0tPgogICAgPHBhdGggZD0iTSA3NjQgMTY1IEwgODEwIDE2NSBDIDgwNiAyNDAgNzk2IDI5MCA3ODYgMzEwIEMgNzc2IDI5MCA3NjYgMjQwIDc2NCAxNjUgWiIgZmlsbD0iI2RjY2I5ZiIvPgogICAgPHBhdGggZD0iTSA3MTYgMTY1IEwgNzY0IDE2NSBDIDc2MCAyNDAgNzQ0IDI5NSA3MjggMzI1IEMgNzE0IDI5NSA3MDggMjMwIDcxNiAxNjUgWiIgZmlsbD0iI2VhZGJiOCIvPgogICAgPHBhdGggZD0iTSA4MDggMTY1IEwgODU4IDE2NSBDIDg2NCAyMzAgODU4IDI5NSA4NDIgMzIyIEMgODI2IDI5NSA4MTIgMjQwIDgwOCAxNjUgWiIgZmlsbD0iI2VhZGJiOCIvPgogICAgPHBhdGggZD0iTSA3MDAgNzQgTCA3MjIgNDAgTCA3NDggNjYgTCA3NzQgNDAgTCA4MDAgNjYgTCA4MjYgNDAgTCA4NTYgNzQgTCA4NjggMTY1IFEgNzg0IDE4MCA3MDggMTY1IFoiIGZpbGw9IiNmN2ZiZmUiLz4KICA8L2c+CgogIDxnIHRleHQtYW5jaG9yPSJtaWRkbGUiIGZpbGw9IiMxYjJhNDEiPgogICAgPHRleHQgeD0iMTIwIiB5PSI0MjAiIGZvbnQtc2l6ZT0iMjIiIGZvbnQtd2VpZ2h0PSJib2xkIj7QoNC10LfRhtGLPC90ZXh0PgogICAgPHRleHQgeD0iMTIwIiB5PSI0NDYiIGZvbnQtc2l6ZT0iMTUiIGZvbnQtc3R5bGU9Iml0YWxpYyI+ZGVudGVzIGluY2lzaXZpPC90ZXh0PgogICAgPHRleHQgeD0iMTIwIiB5PSI0NzIiIGZvbnQtc2l6ZT0iMTUiPjgg0LfRg9Cx0L7QsiDCtyDQvtGC0LrRg9GB0YvQstCw0L3QuNC1PC90ZXh0PgoKICAgIDx0ZXh0IHg9IjMzMCIgeT0iNDQwIiBmb250LXNpemU9IjIyIiBmb250LXdlaWdodD0iYm9sZCI+0JrQu9GL0LrQuDwvdGV4dD4KICAgIDx0ZXh0IHg9IjMzMCIgeT0iNDY2IiBmb250LXNpemU9IjE1IiBmb250LXN0eWxlPSJpdGFsaWMiPmRlbnRlcyBjYW5pbmk8L3RleHQ+CiAgICA8dGV4dCB4PSIzMzAiIHk9IjQ5MiIgZm9udC1zaXplPSIxNSI+NCDQt9GD0LHQsCDCtyDRgNCw0LfRgNGL0LLQsNC90LjQtTwvdGV4dD4KCiAgICA8dGV4dCB4PSI1NDAiIHk9IjQyMCIgZm9udC1zaXplPSIyMiIgZm9udC13ZWlnaHQ9ImJvbGQiPtCf0YDQtdC80L7Qu9GP0YDRizwvdGV4dD4KICAgIDx0ZXh0IHg9IjU0MCIgeT0iNDQ2IiBmb250LXNpemU9IjE1IiBmb250LXN0eWxlPSJpdGFsaWMiPmRlbnRlcyBwcmVtb2xhcmVzPC90ZXh0PgogICAgPHRleHQgeD0iNTQwIiB5PSI0NzIiIGZvbnQtc2l6ZT0iMTUiPjgg0LfRg9Cx0L7QsiDCtyDRgNCw0LfQtNCw0LLQu9C40LLQsNC90LjQtTwvdGV4dD4KCiAgICA8dGV4dCB4PSI3ODQiIHk9IjQyMCIgZm9udC1zaXplPSIyMiIgZm9udC13ZWlnaHQ9ImJvbGQiPtCc0L7Qu9GP0YDRizwvdGV4dD4KICAgIDx0ZXh0IHg9Ijc4NCIgeT0iNDQ2IiBmb250LXNpemU9IjE1IiBmb250LXN0eWxlPSJpdGFsaWMiPmRlbnRlcyBtb2xhcmVzPC90ZXh0PgogICAgPHRleHQgeD0iNzg0IiB5PSI0NzIiIGZvbnQtc2l6ZT0iMTUiPjEyINC30YPQsdC+0LIgwrcg0L/QtdGA0LXRgtC40YDQsNC90LjQtTwvdGV4dD4KICA8L2c+CiAgPHRleHQgeD0iMjAiIHk9IjUyMiIgZm9udC1zaXplPSIxMyIgZmlsbD0iIzZiNzI4MCIgZm9udC1zdHlsZT0iaXRhbGljIj7QodGF0LXQvNCw0YLQuNGH0L3Ri9C1INGB0LjQu9GD0Y3RgtGLLCDQvdC1INCyINC80LDRgdGI0YLQsNCx0LUgKNC80L7Qu9GP0YAg0L/QvtC60LDQt9Cw0L0g0LrQsNC6INCy0LXRgNGF0L3QuNC5IOKAlCDRgSDRgtGA0LXQvNGPINC60L7RgNC90Y/QvNC4KS4g0JDQstGC0L7RgNGB0LrQsNGPINC40LvQu9GO0YHRgtGA0LDRhtC40Y8g0L/RgNC+0LXQutGC0LAuPC90ZXh0Pgo8L3N2Zz4K" alt="Силуэты резца, клыка, премоляра и моляра с их латинскими названиями и числом зубов">
+  <figcaption><b>Рис. 3.</b> Четыре группы постоянных зубов (схематичные силуэты).</figcaption>
+</figure>
+
+<div class="table-wrap"><table class="atlas">
+  <thead><tr><th>Группа</th><th>Всего</th><th>Коронка</th><th>Корней</th><th>Функция</th></tr></thead>
+  <tbody>
+    <tr><td>Резцы</td><td>8</td><td>долотообразная с режущим краем</td><td>1</td><td>откусывание пищи, участие в речи и эстетике</td></tr>
+    <tr><td>Клыки</td><td>4</td><td>конусовидная, один бугор</td><td>1</td><td>удерживание и разрывание пищи</td></tr>
+    <tr><td>Премоляры</td><td>8</td><td>2–3 бугра, призматическая</td><td>1–2</td><td>раздавливание и частичное перетирание</td></tr>
+    <tr><td>Моляры</td><td>12</td><td>широкая, 4–5 бугров</td><td>2–3</td><td>перетирание пищи</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout">
+  <span class="tag">Зубная формула</span>
+  <p>Для половины челюсти: <b>2 резца · 1 клык · 2 премоляра · 3 моляра</b>, то есть 2·1·2·3. На обеих челюстях это 2 × 2 × (2 + 1 + 2 + 3) = 32 зуба. Часто пишут «2123/2123».</p>
+</div>
+
+<p>В русскоязычной литературе премоляры называют <b>малыми коренными</b>, а моляры — <b>большими коренными</b> зубами.</p>` },
+
+    /* 12 --------------------------------------------------------------- */
+    { id: 'incisors', kicker: 'Раздел 3 · Морфология', title: 'Резцы (dentes incisivi)',
+      tocTitle: 'Резцы',
+      html: `
+<p class="lead">Резцы расположены в передней части зубного ряда. Коронка долотообразная, с острым режущим краем; корень один. Свежепрорезавшийся резец имеет на режущем крае три небольших выступа — <b>мамелона</b>, которые быстро стираются.</p>
+
+<div class="table-wrap"><table class="atlas">
+  <thead><tr><th>Зуб</th><th>Коронка</th><th>Корень</th><th>Особенности</th></tr></thead>
+  <tbody>
+    <tr><td>Верхний центральный (11, 21)</td><td>Самый крупный резец; губная поверхность слегка выпуклая, нёбная — лопатообразная, с краевыми валиками и кингулумом.</td><td>Один, конической формы, на срезе округло-треугольный.</td><td>Мезиальный угол почти прямой, дистальный — округлый.</td></tr>
+    <tr><td>Верхний боковой (12, 22)</td><td>Уже и короче центрального.</td><td>Тонкий, верхушка часто изогнута дистально.</td><td>На нёбной стороне нередка слепая ямка; бывает врождённая адентия или «колышковидная» форма.</td></tr>
+    <tr><td>Нижний центральный (31, 41)</td><td>Самый маленький зуб, узкая симметричная коронка.</td><td>Один, сплющен в мезиально-дистальном направлении.</td><td>Признаки стороны выражены слабо; в корне иногда два канала.</td></tr>
+    <tr><td>Нижний боковой (32, 42)</td><td>Чуть шире нижнего центрального; режущий край скошен дистально.</td><td>Один, сплющенный, длиннее центрального.</td><td>Коронка слегка развёрнута относительно корня.</td></tr>
+  </tbody>
+</table></div>
+
+<h3>Общие признаки</h3>
+<ul>
+  <li>вестибулярная поверхность гладкая, оральная — вогнутая, с валиками и ямкой;</li>
+  <li>режущий край работает как нож и формирует переднее направляющее смыкание;</li>
+  <li>верхние резцы крупнее нижних, они прикрывают нижние при смыкании.</li>
+</ul>` },
+
+    /* 13 --------------------------------------------------------------- */
+    { id: 'canines', kicker: 'Раздел 3 · Морфология', title: 'Клыки (dentes canini)',
+      tocTitle: 'Клыки',
+      html: `
+<p class="lead">Клыки — «угловые камни» зубной дуги. Коронка конусовидная с одним мощным бугром, корень самый длинный из всех зубов, поэтому клык хорошо удерживается в челюсти и нередко сохраняется дольше других.</p>
+
+<div class="cols">
+  <div class="panel"><h4>Верхний клык (13, 23)</h4>
+    <ul>
+      <li>Бугор имеет два ската: мезиальный короче, дистальный длиннее.</li>
+      <li>На губной стороне виден вертикальный валик, на нёбной — кингулум, язычный валик и две ямки.</li>
+      <li>Корень мощный, овальный на срезе, длиной около 16–17 мм.</li>
+      <li>Образует на челюсти <b>клыковое возвышение</b>, поддерживающее контур губы.</li>
+    </ul></div>
+  <div class="panel"><h4>Нижний клык (33, 43)</h4>
+    <ul>
+      <li>Коронка уже и длиннее верхней, вершина бугра смещена мезиально.</li>
+      <li>Язычная поверхность более плоская.</li>
+      <li>Корень сплющен с боков, иногда раздвоен.</li>
+    </ul></div>
+</div>
+
+<div class="callout clinic">
+  <span class="tag">Клиническая связь</span>
+  <p>Клыки участвуют в боковых движениях нижней челюсти и принимают на себя часть нагрузки («клыковое ведение»), разгружая премоляры и моляры. Верхний клык прорезывается поздно (11–12 лет) и нередко остаётся ретинированным (не прорезавшимся).</p>
+</div>` },
+
+    /* 14 --------------------------------------------------------------- */
+    { id: 'premolars', kicker: 'Раздел 3 · Морфология', title: 'Премоляры (dentes premolares)',
+      tocTitle: 'Премоляры',
+      html: `
+<p class="lead">Премоляры стоят между клыками и молярами. В молочном прикусе премоляров нет: они прорезываются на месте временных моляров. Коронка призматическая, на жевательной поверхности два бугра — щёчный и нёбный (язычный).</p>
+
+<div class="table-wrap"><table class="atlas">
+  <thead><tr><th>Зуб</th><th>Бугры</th><th>Корень</th><th>Особенности</th></tr></thead>
+  <tbody>
+    <tr><td>Верхний 1-й (14, 24)</td><td>Два: щёчный крупнее нёбного.</td><td>Чаще два (щёчный и нёбный), иногда один с бороздой.</td><td>На мезиальной поверхности коронки и корня — продольное углубление; жевательный контур широкий в щёчно-нёбном направлении.</td></tr>
+    <tr><td>Верхний 2-й (15, 25)</td><td>Два примерно равной высоты.</td><td>Обычно один.</td><td>Коронка более округлая и симметричная, чем у первого.</td></tr>
+    <tr><td>Нижний 1-й (34, 44)</td><td>Крупный щёчный и малый язычный (почти без функции).</td><td>Один.</td><td>Щёчный бугор напоминает бугор клыка; от щёчного бугра к язычному идёт поперечный валик.</td></tr>
+    <tr><td>Нижний 2-й (35, 45)</td><td>Два или три: чаще один щёчный и два язычных.</td><td>Один.</td><td>Больше первого, по форме приближается к моляру.</td></tr>
+  </tbody>
+</table></div>
+
+<p>Функция премоляров — раздавливание и частичное перетирание пищи. Эти зубы также сохраняют высоту нижней трети лица и участвуют в стабильности прикуса.</p>
+
+<div class="callout">
+  <span class="tag">Запомните</span>
+  <p>В русскоязычных руководствах премоляры иногда называют <b>малыми коренными зубами</b>, а в англоязычной литературе — <em>bicuspids</em> («двубугорковые»), хотя у нижних вторых премоляров бугров бывает три.</p>
+</div>` },
+
+    /* 15 --------------------------------------------------------------- */
+    { id: 'molars', kicker: 'Раздел 3 · Морфология', title: 'Моляры (dentes molares)',
+      tocTitle: 'Моляры',
+      html: `
+<p class="lead">Моляры — самые крупные зубы с широкой жевательной поверхностью. Они перетирают пищу. Корней у них два или три; расхождение корней защищает зуб от смещения при нагрузке.</p>
+
+<div class="table-wrap"><table class="atlas">
+  <thead><tr><th>Зуб</th><th>Коронка</th><th>Корни</th><th>Особенности</th></tr></thead>
+  <tbody>
+    <tr><td>Верхний 1-й (16, 26)</td><td>Ромбовидная, 4 основных бугра; самый крупный — мезионёбный.</td><td>3: мезиально-щёчный, дистально-щёчный, нёбный (самый длинный и мощный).</td><td>Косой валик соединяет мезионёбный и дистально-щёчный бугры; на мезионёбном бугре может быть <b>бугорок Карабелли</b>.</td></tr>
+    <tr><td>Верхний 2-й (17, 27)</td><td>Меньше первого, 4 бугра, дистальный выражен слабее.</td><td>3, часто сближены, иногда срастаются.</td><td>Форма варьирует.</td></tr>
+    <tr><td>Нижний 1-й (36, 46)</td><td>Прямоугольная, 5 бугров: 3 щёчных и 2 язычных.</td><td>2: мезиальный (широкий, обычно с двумя каналами) и дистальный.</td><td>Самый крупный нижний зуб; первым из постоянных прорезывается (около 6 лет) — «шестилетний моляр».</td></tr>
+    <tr><td>Нижний 2-й (37, 47)</td><td>4 бугра, крестообразная система фиссур.</td><td>2, нередко сближены.</td><td>Меньше первого моляра.</td></tr>
+    <tr><td>Третьи (18, 28, 38, 48)</td><td>Форма и размеры очень изменчивы.</td><td>Часто сросшиеся, вариабельные.</td><td>Зубы мудрости: прорезываются в 17–25 лет, часто частично или не прорезываются.</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout clinic">
+  <span class="tag">Клиническая связь</span>
+  <p>Первый постоянный моляр прорезывается позади молочных зубов без смены, поэтому родители принимают его за молочный и не уделяют достаточной гигиене. Из-за глубоких фиссур он чаще других поражается кариесом; при профилактике применяют герметизацию фиссур.</p>
+</div>` },
+
+    /* 16 --------------------------------------------------------------- */
+    { id: 'eruption', kicker: 'Раздел 3 · Морфология', title: 'Сроки прорезывания постоянных зубов',
+      tocTitle: 'Сроки прорезывания',
+      html: `
+<p>Постоянные зубы прорезываются с 6 лет до подросткового возраста; зубы мудрости — позже. Корень полностью формируется примерно через 2–3 года после прорезывания коронки.</p>
+
+<div class="table-wrap"><table class="atlas">
+  <thead><tr><th>Зуб</th><th>Верхняя челюсть</th><th>Нижняя челюсть</th></tr></thead>
+  <tbody>
+    <tr><td>Центральный резец</td><td>7–8 лет</td><td>6–7 лет</td></tr>
+    <tr><td>Боковой резец</td><td>8–9 лет</td><td>7–8 лет</td></tr>
+    <tr><td>Клык</td><td>11–12 лет</td><td>9–10 лет</td></tr>
+    <tr><td>Первый премоляр</td><td>10–11 лет</td><td>10–12 лет</td></tr>
+    <tr><td>Второй премоляр</td><td>10–12 лет</td><td>11–12 лет</td></tr>
+    <tr><td>Первый моляр</td><td>6–7 лет</td><td>6–7 лет</td></tr>
+    <tr><td>Второй моляр</td><td>12–13 лет</td><td>11–13 лет</td></tr>
+    <tr><td>Третий моляр</td><td>17–25 лет</td><td>17–25 лет</td></tr>
+  </tbody>
+</table></div>
+<p class="sources">Приведены усреднённые сроки; разные источники дают чуть отличающиеся интервалы. Индивидуальная вариабельность — до года и более, у девочек зубы прорезываются в среднем раньше.</p>
+
+<div class="callout">
+  <span class="tag">Практика</span>
+  <p>Смена зубов начинается с первого моляра и нижних центральных резцов — в этот период говорят о <b>сменном прикусе</b>. Знание сроков помогает отличить норму от задержки прорезывания.</p>
+</div>` },
+
+    /* 17 --------------------------------------------------------------- */
+    { id: 'nomenclature', kicker: 'Раздел 4 · Номенклатура', title: 'Анатомическая (латинская) номенклатура',
+      tocTitle: 'Анатомическая номенклатура',
+      html: `
+<p>В анатомии и гистологии используют латинские названия по международной анатомической терминологии (<em>Terminologia Anatomica</em>). Название строится по принципу «группа + порядковая позиция от срединной линии».</p>
+
+<div class="table-wrap"><table class="atlas">
+  <thead><tr><th>№</th><th>Латинское название</th><th>Русское название</th><th>Традиционное название</th></tr></thead>
+  <tbody>
+    <tr><td>1</td><td><em>dens incisivus medialis</em></td><td>центральный резец</td><td>медиальный резец</td></tr>
+    <tr><td>2</td><td><em>dens incisivus lateralis</em></td><td>боковой резец</td><td>латеральный резец</td></tr>
+    <tr><td>3</td><td><em>dens caninus</em></td><td>клык</td><td>глазной зуб (верхний)</td></tr>
+    <tr><td>4</td><td><em>dens premolaris primus</em></td><td>первый премоляр</td><td>1-й малый коренной</td></tr>
+    <tr><td>5</td><td><em>dens premolaris secundus</em></td><td>второй премоляр</td><td>2-й малый коренной</td></tr>
+    <tr><td>6</td><td><em>dens molaris primus</em></td><td>первый моляр</td><td>1-й большой коренной</td></tr>
+    <tr><td>7</td><td><em>dens molaris secundus</em></td><td>второй моляр</td><td>2-й большой коренной</td></tr>
+    <tr><td>8</td><td><em>dens molaris tertius (dens serotinus)</em></td><td>третий моляр</td><td>зуб мудрости</td></tr>
+  </tbody>
+</table></div>
+
+<p>К названию зуба добавляют челюсть и сторону: например, <em>dens molaris primus maxillaris dexter</em> — первый моляр верхней челюсти справа. В клинической речи принято называть зуб коротко: «шестой верхний справа».</p>
+
+<div class="callout">
+  <span class="tag">Запомните</span>
+  <p>Латинские названия применяют в учебниках, на экзаменах и в научных статьях, а цифровую запись FDI — в истории болезни, на снимках и в обмене между врачами разных стран.</p>
+</div>` },
+
+    /* 18 --------------------------------------------------------------- */
+    { id: 'fdi', kicker: 'Раздел 4 · Номенклатура', title: 'Международная система FDI (ISO 3950)',
+      tocTitle: 'Система FDI',
+      html: `
+<p>Двузначная система Всемирной стоматологической федерации (FDI) принята как международный стандарт <b>ISO 3950</b> и используется в большинстве стран. Каждый зуб получает код из двух цифр.</p>
+
+<div class="cols">
+  <div class="panel"><h4>Первая цифра — четверть (квадрант)</h4>
+    <ul>
+      <li><b>1</b> — верхняя правая</li>
+      <li><b>2</b> — верхняя левая</li>
+      <li><b>3</b> — нижняя левая</li>
+      <li><b>4</b> — нижняя правая</li>
+    </ul>
+    <p>Для молочных зубов используют квадранты <b>5, 6, 7, 8</b>.</p></div>
+  <div class="panel"><h4>Вторая цифра — позиция зуба</h4>
+    <p>Зубы считают от срединной линии к последнему зубу ряда:</p>
+    <p><b>1</b> центральный резец · <b>2</b> боковой резец · <b>3</b> клык · <b>4</b> первый премоляр · <b>5</b> второй премоляр · <b>6</b> первый моляр · <b>7</b> второй моляр · <b>8</b> третий моляр.</p></div>
+</div>
+
+<div class="callout">
+  <span class="tag">Как читать</span>
+  <p>Код произносят по цифрам: <b>«один–один»</b>, <b>«три–шесть»</b>, а не «одиннадцать» и «тридцать шесть». Схему рисуют «глазами врача»: правая сторона пациента находится слева на схеме. Примеры: 11 — верхний правый центральный резец; 36 — нижний левый первый моляр.</p>
+</div>
+
+<h3>Попробуйте сами</h3>
+<div data-fdi></div>
+
+<figure class="narrow" id="figCommonsUpper">
+  <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Zahnschema_OK_1.jpg?width=900" alt="Модель верхней челюсти с номерами зубов по системе ISO" loading="lazy" onerror="this.closest('figure').remove()">
+  <figcaption><b>Рис. 4.</b> Верхняя челюсть с номерами по ISO (файл «Zahnschema OK 1.jpg», Wikimedia Commons; условия использования указаны на странице файла). Если интернет недоступен, рисунок не отображается.</figcaption>
+</figure>
+<figure class="narrow" id="figCommonsLower">
+  <img src="https://commons.wikimedia.org/wiki/Special:FilePath/Zahneschema_UK_1.jpg?width=900" alt="Модель нижней челюсти с номерами зубов по системе ISO" loading="lazy" onerror="this.closest('figure').remove()">
+  <figcaption><b>Рис. 5.</b> Нижняя челюсть с номерами по ISO (файл «Zahneschema UK 1.jpg», Wikimedia Commons).</figcaption>
+</figure>` },
+
+    /* 19 --------------------------------------------------------------- */
+    { id: 'other-systems', kicker: 'Раздел 4 · Номенклатура', title: 'Другие системы записи и перевод между ними',
+      tocTitle: 'Другие системы',
+      html: `
+<p>В литературе и практике встречаются и другие системы. Знать их нужно, чтобы читать старые записи и иностранные источники.</p>
+
+<div class="cols">
+  <div class="panel"><h4>Универсальная (ADA)</h4>
+    <p>Сквозная нумерация постоянных зубов <b>от 1 до 32</b>: от верхнего правого третьего моляра (№ 1) по верхнему ряду до верхнего левого третьего моляра (№ 16), затем нижний левый третий моляр (№ 17) и по нижнему ряду до нижнего правого третьего моляра (№ 32). Широко применяется в США.</p></div>
+  <div class="panel"><h4>Зигмонди–Палмер</h4>
+    <p>Челюсть делят на четыре квадранта, зубы нумеруют <b>1–8</b> от срединной линии, а квадрант показывают угловой скобкой около цифры. Историческая система; в Великобритании ею пользуются до сих пор.</p></div>
+</div>
+
+<div class="table-wrap"><table class="atlas">
+  <thead><tr><th>Зуб</th><th>FDI</th><th>Универсальная</th><th>Зигмонди–Палмер</th></tr></thead>
+  <tbody>
+    <tr><td>Верхний правый третий моляр</td><td>18</td><td>1</td><td>верхний правый 8</td></tr>
+    <tr><td>Верхний правый центральный резец</td><td>11</td><td>8</td><td>верхний правый 1</td></tr>
+    <tr><td>Верхний левый центральный резец</td><td>21</td><td>9</td><td>верхний левый 1</td></tr>
+    <tr><td>Верхний левый клык</td><td>23</td><td>11</td><td>верхний левый 3</td></tr>
+    <tr><td>Нижний левый третий моляр</td><td>38</td><td>17</td><td>нижний левый 8</td></tr>
+    <tr><td>Нижний левый первый моляр</td><td>36</td><td>19</td><td>нижний левый 6</td></tr>
+    <tr><td>Нижний правый центральный резец</td><td>41</td><td>25</td><td>нижний правый 1</td></tr>
+    <tr><td>Нижний правый третий моляр</td><td>48</td><td>32</td><td>нижний правый 8</td></tr>
+  </tbody>
+</table></div>
+
+<div class="callout clinic">
+  <span class="tag">Практический совет</span>
+  <p>Перед чтением зарубежной статьи или рентгенологического заключения уточняйте, какая система использована: число «19» в FDI не существует, а в универсальной это нижний левый первый моляр.</p>
+</div>` },
+
+    /* 20 --------------------------------------------------------------- */
+    { id: 'summary', kicker: 'Итоги', title: 'Ключевые выводы и вопросы для самопроверки',
+      tocTitle: 'Выводы и самопроверка',
+      html: `
+<h3>Главное из урока</h3>
+<ul>
+  <li>Зуб состоит из коронки, шейки и корня; внутри находится полость с пульпой.</li>
+  <li>Три твёрдые ткани: <b>эмаль</b> (самая минерализованная, без клеток), <b>дентин</b> (основа зуба, канальцы с отростками одонтобластов), <b>цемент</b> (покрывает корень, к нему крепятся волокна периодонта). Мягкая ткань — <b>пульпа</b> (сосуды, нервы, одонтобласты).</li>
+  <li>32 постоянных зуба: 8 резцов, 4 клыка, 8 премоляров, 12 моляров; формула половины челюсти 2·1·2·3.</li>
+  <li>Форма коронки и число корней отражают функцию: режущие, рвущие и перетирающие зубы.</li>
+  <li>В системе FDI код состоит из двух цифр: квадрант (1–4) и позиция зуба (1–8).</li>
+</ul>
+
+<h3>Вопросы для самопроверки</h3>
+<details class="panel" style="margin-bottom:10px"><summary><b>1.</b> Какой зуб имеет код 46 и чем он характеризуется?</summary>
+  <p>Нижний правый первый моляр: пять бугров (три щёчных, два язычных), два корня; прорезывается около 6 лет.</p></details>
+<details class="panel" style="margin-bottom:10px"><summary><b>2.</b> Какой номер в универсальной системе у зуба 23?</summary>
+  <p>№ 11 (верхний левый клык).</p></details>
+<details class="panel" style="margin-bottom:10px"><summary><b>3.</b> Какая ткань зуба не содержит клеток и не регенерирует?</summary>
+  <p>Эмаль: амелобласты исчезают после прорезывания зуба.</p></details>
+<details class="panel" style="margin-bottom:10px"><summary><b>4.</b> Что находится в дентинных канальцах?</summary>
+  <p>Отростки одонтобластов и тканевая жидкость.</p></details>
+<details class="panel" style="margin-bottom:10px"><summary><b>5.</b> Сколько корней у верхнего первого моляра и как они называются?</summary>
+  <p>Три: мезиально-щёчный, дистально-щёчный и нёбный.</p></details>
+<details class="panel" style="margin-bottom:10px"><summary><b>6.</b> Какие признаки позволяют определить сторону зуба?</summary>
+  <p>Признак угла коронки, признак кривизны коронки и признак корня (отклонение верхушки в дистальную сторону).</p></details>
+
+<div class="callout">
+  <span class="tag">Дальше</span>
+  <p>Последний слайд — «Значение терминов»: словарь с поиском по русскому и латинскому названию.</p>
+</div>` },
+
+    /* 21 --------------------------------------------------------------- */
+    { id: 'glossary', kicker: 'Словарь', title: 'Значение терминов',
+      tocTitle: 'Значение терминов',
+      html: `
+<p>Ключевые термины урока в алфавитном порядке. Начните вводить слово в поле поиска, чтобы отфильтровать список.</p>
+<div data-glossary></div>
+
+<h3>Для дальнейшего изучения</h3>
+<ul class="sources">
+  <li>Международная анатомическая терминология (<em>Terminologia Anatomica</em>), Международная федерация ассоциаций анатомов (FIPAT).</li>
+  <li>ISO 3950: Dentistry — Designation system for teeth and areas of the oral cavity (система FDI).</li>
+  <li>Ten Cate's Oral Histology: Development, Structure, and Function (A. Nanci).</li>
+  <li>Wheeler's Dental Anatomy, Physiology and Occlusion.</li>
+  <li>Gray's Anatomy: The Anatomical Basis of Clinical Practice.</li>
+  <li>Сапин М. Р. Анатомия человека; Привес М. Г., Лысенков Н. К., Бушкович В. И. Анатомия человека.</li>
+  <li>Ross M. H., Pawlina W. Histology: A Text and Atlas.</li>
+</ul>
+<p class="sources">Числовые значения (размеры, проценты, сроки) округлены и в разных источниках различаются; для экзамена ориентируйтесь на учебник вашей кафедры.</p>` }
+  ],
+
+  /* ----------------------------------------------------------------------
+     Глоссарий
+     ---------------------------------------------------------------------- */
+  glossary: [
+    { term: 'Альвеола зубная', latin: 'alveolus dentalis', def: 'Костная лунка в альвеолярном отростке челюсти, в которой фиксируется корень зуба.' },
+    { term: 'Амелобласты', latin: 'ameloblasti', def: 'Эпителиальные клетки, образующие эмаль. После прорезывания зуба исчезают, поэтому эмаль не восстанавливается.' },
+    { term: 'Апекс (верхушка корня)', latin: 'apex radicis dentis', def: 'Конец корня зуба, где расположено верхушечное отверстие.' },
+    { term: 'Бугор', latin: 'cuspis dentis', def: 'Конусообразное или округлое возвышение на жевательной поверхности коронки.' },
+    { term: 'Бугорок Карабелли', latin: 'tuberculum Carabelli', def: 'Добавочный бугорок на нёбной поверхности мезионёбного бугра верхних первых моляров.' },
+    { term: 'Верхушечное отверстие', latin: 'foramen apicis dentis', def: 'Отверстие на верхушке корня, через которое в пульпу входят сосуды и нервы.' },
+    { term: 'Вестибулярная поверхность', latin: 'facies vestibularis', def: 'Поверхность коронки, обращённая к губам и щекам (губная у передних зубов, щёчная у боковых).' },
+    { term: 'Волокна Шарпея', latin: 'fibrae perforantes', def: 'Концы коллагеновых волокон периодонтальной связки, вплетённые в цемент корня и в кость лунки.' },
+    { term: 'Гидроксиапатит', latin: '', def: 'Кристаллический фосфат кальция Ca10(PO4)6(OH)2 — основное минеральное вещество эмали, дентина, цемента и кости.' },
+    { term: 'Гомфоз', latin: 'gomphosis', def: 'Вид соединения, при котором зуб удерживается в альвеоле волокнами периодонтальной связки.' },
+    { term: 'Дельта верхушки', latin: '', def: 'Разветвление корневого канала в области верхушки на несколько тонких каналов.' },
+    { term: 'Дентин', latin: 'dentinum', def: 'Твёрдая ткань, образующая основную массу зуба; пронизана дентинными канальцами и расположена между эмалью (цементом) и пульпой.' },
+    { term: 'Дентин вторичный', latin: '', def: 'Дентин, который медленно откладывается всю жизнь после завершения формирования корня; уменьшает объём полости зуба.' },
+    { term: 'Дентин третичный (репаративный)', latin: '', def: 'Дентин, образующийся как ответ пульпы на раздражение: кариес, стирание, препарирование.' },
+    { term: 'Дентинные канальцы', latin: 'tubuli dentinales', def: 'Тонкие каналы в дентине (диаметром около 1–4 мкм), идущие от пульпы к периферии; содержат отростки одонтобластов.' },
+    { term: 'Дистальная поверхность', latin: 'facies distalis', def: 'Контактная поверхность зуба, обращённая от срединной линии зубной дуги.' },
+    { term: 'Зубная формула', latin: '', def: 'Запись числа зубов каждой группы на половине челюсти; для постоянных зубов 2·1·2·3 (2 резца, 1 клык, 2 премоляра, 3 моляра).' },
+    { term: 'Зуб мудрости', latin: 'dens serotinus', def: 'Третий моляр (код 8 в системе FDI); прорезывается в 17–25 лет, часто задерживается в челюсти.' },
+    { term: 'Интерглобулярный дентин', latin: '', def: 'Участки дентина, в которых глобулы минерализации не слились; также называют пространствами Чермака.' },
+    { term: 'Клык', latin: 'dens caninus', def: 'Зуб с одним мощным бугром и самым длинным корнем; удерживает и разрывает пищу.' },
+    { term: 'Кингулум (зубной бугорок)', latin: 'cingulum', def: 'Утолщение эмали у шейки на оральной поверхности резцов и клыков.' },
+    { term: 'Коронка анатомическая', latin: 'corona dentis', def: 'Часть зуба, покрытая эмалью, от шейки до жевательной поверхности или режущего края.' },
+    { term: 'Коронка клиническая', latin: '', def: 'Часть зуба, видимая во рту над десной; при рецессии десны увеличивается.' },
+    { term: 'Корень', latin: 'radix dentis', def: 'Часть зуба, покрытая цементом и расположенная в альвеоле; у разных зубов число корней от одного до трёх.' },
+    { term: 'Корневой канал', latin: 'canalis radicis dentis', def: 'Узкий канал внутри корня, продолжающий полость коронки и открывающийся верхушечным отверстием.' },
+    { term: 'Косой валик', latin: 'crista obliqua', def: 'Эмалевый валик на жевательной поверхности верхних моляров, соединяющий мезионёбный и дистально-щёчный бугры.' },
+    { term: 'Краевой валик', latin: 'crista marginalis', def: 'Возвышение эмали по краю жевательной или оральной поверхности зуба.' },
+    { term: 'Кутикула Насмита', latin: '', def: 'Тонкая оболочка на поверхности вновь прорезавшегося зуба, быстро стирающаяся.' },
+    { term: 'Линии Ретциуса', latin: 'striae Retzii', def: 'Ростовые линии в эмали, отражающие послойное откладывание матрикса при формировании коронки.' },
+    { term: 'Мамелоны', latin: '', def: 'Три небольших выступа на режущем крае только что прорезавшегося резца; стираются вскоре после прорезывания.' },
+    { term: 'Мезиальная поверхность', latin: 'facies mesialis', def: 'Контактная поверхность зуба, обращённая к срединной линии зубной дуги.' },
+    { term: 'Моляры', latin: 'dentes molares', def: 'Большие коренные зубы (по три в каждой половине челюсти); широкая жевательная поверхность с 4–5 буграми, корней 2–3.' },
+    { term: 'Окклюзия', latin: 'occlusio', def: 'Смыкание зубов верхней и нижней челюстей.' },
+    { term: 'Одонтобласты', latin: 'odontoblasti', def: 'Клетки пульпы, образующие дентин; тела лежат на границе с дентином, отростки идут в дентинных канальцах.' },
+    { term: 'Оральная поверхность', latin: '', def: 'Поверхность коронки, обращённая к полости рта: язычная на нижних зубах и нёбная на верхних.' },
+    { term: 'Перикиматы', latin: '', def: 'Поперечные валики на поверхности эмали — выход линий Ретциуса.' },
+    { term: 'Периодонтальная связка', latin: 'ligamentum periodontale', def: 'Соединительнотканные волокна между цементом корня и костью лунки; удерживают и амортизируют зуб.' },
+    { term: 'Полосы Гунтера–Шрегера', latin: '', def: 'Светлые и тёмные полосы на продольном шлифе эмали, возникающие из-за смены направления хода призм.' },
+    { term: 'Полость зуба', latin: 'cavitas dentis', def: 'Замкнутая полость внутри зуба, заполненная пульпой; включает полость коронки и корневые каналы.' },
+    { term: 'Предентин', latin: 'praedentinum', def: 'Необызвествлённый слой молодого дентина вдоль границы с пульпой.' },
+    { term: 'Премоляры', latin: 'dentes premolares', def: 'Малые коренные зубы (по два в каждой половине челюсти); на жевательной поверхности два (реже три) бугра.' },
+    { term: 'Пульпа', latin: 'pulpa dentis', def: 'Рыхлая соединительная ткань полости зуба с сосудами, нервами и клетками; формирует дентин и обеспечивает чувствительность зуба.' },
+    { term: 'Рога пульпы', latin: 'cornua pulpae', def: 'Выступы полости коронки, направленные в сторону бугров зуба.' },
+    { term: 'Резцы', latin: 'dentes incisivi', def: 'Передние зубы с режущим краем и одним корнем (по два в каждой половине челюсти).' },
+    { term: 'Режущий край', latin: 'margo incisalis', def: 'Острый край коронки резцов и клыков, предназначенный для откусывания.' },
+    { term: 'Фиссура', latin: '', def: 'Естественная борозда на жевательной поверхности между бугорками.' },
+    { term: 'Фуркация', latin: '', def: 'Место разделения корней многокорневого зуба.' },
+    { term: 'Цемент', latin: 'cementum', def: 'Минерализованная ткань, покрывающая дентин корня и дающая прикрепление волокнам периодонта; бывает бесклеточным и клеточным.' },
+    { term: 'Цементоциты', latin: '', def: 'Клетки клеточного цемента, лежащие в лакунах.' },
+    { term: 'Шейка зуба', latin: 'cervix dentis', def: 'Место перехода коронки в корень на уровне эмалево-цементной границы.' },
+    { term: 'Эмаль', latin: 'enamelum', def: 'Бесклеточная ткань, покрывающая коронку; самая твёрдая и самая минерализованная ткань организма (около 95–96 % минеральных веществ).' },
+    { term: 'Эмалевые призмы', latin: 'prismata enameli', def: 'Структурные единицы эмали — столбики диаметром около 4–6 мкм, идущие от эмалево-дентинной границы к поверхности.' },
+    { term: 'Эмалево-дентинная граница', latin: 'junctio dentinoenamelica', def: 'Фестончатая граница между эмалью и дентином в области коронки.' },
+    { term: 'Эмалево-цементная граница', latin: 'junctio cementoenamelica', def: 'Линия встречи эмали и цемента на шейке зуба.' },
+    { term: 'FDI (ISO 3950)', latin: '', def: 'Двузначная международная система обозначения зубов: первая цифра — квадрант, вторая — позиция зуба от срединной линии.' },
+    { term: 'Квадрант', latin: '', def: 'Четверть зубного ряда: верхняя правая, верхняя левая, нижняя левая, нижняя правая.' }
+  ]
+};
+
+  </script>
+  <script>
+/* ==========================================================================
+   Одностраничная версия (SPA): главная и уроки живут в одном index.html.
+   Маршруты по hash:   #/            — список уроков
+                       #/dental-01   — урок (режим сохраняется)
+                       #/dental-01/7 — урок, слайд 7
+   Данные уроков уже загружены в window.LESSONS (встроены в файл при сборке).
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+    });
+  };
+  function store(key, val) {
+    try {
+      if (val === undefined) return window.localStorage.getItem(key);
+      window.localStorage.setItem(key, val);
+    } catch (e) { return null; }
+  }
+
+  var HOME_TITLE = 'Атлас стоматолога — уроки для студентов-медиков';
+  var lesson = null, currentId = null, idx = 0, longMode = false, uiReady = false;
+
+  /* ---------- Главная: карточки уроков ---------- */
+  function buildHome() {
+    $('lessons').innerHTML = window.LESSON_INDEX.map(function (l) {
+      if (l.status === 'soon') {
+        return '<article class="lesson-card soon"><div class="thumb"><span>Скоро</span></div>' +
+          '<div class="body"><div class="num">Урок ' + l.number + '</div><h2>' + esc(l.title) + '</h2><p>' + esc(l.summary) + '</p></div></article>';
+      }
+      return '<a class="lesson-card" href="#/' + encodeURIComponent(l.id) + '">' +
+        '<div class="thumb"><img src="' + esc(l.cover) + '" alt="' + esc(l.coverAlt) + '"></div>' +
+        '<div class="body"><div class="num">Урок ' + l.number + '</div><h2>' + esc(l.title) + '</h2><p>' + esc(l.summary) + '</p>' +
+        '<div class="meta"><span>' + l.slides + ' слайдов</span><span>~' + l.minutes + ' мин</span><span>Глоссарий</span></div></div></a>';
+    }).join('');
+  }
+
+  /* ---------- Маршрутизатор ---------- */
+  function route() {
+    var m = /^#\/([a-z0-9-]+)(?:\/(\d+))?$/.exec(location.hash);
+    if (!m) return showHome();
+    var entry = window.LESSON_INDEX.filter(function (l) { return l.id === m[1] && l.status === 'ready'; })[0];
+    var data = entry && (window.LESSONS || {})[entry.id];
+    if (!data) { history.replaceState(null, '', '#/'); return showHome(); }
+    openLesson(entry.id, data, m[2] ? parseInt(m[2], 10) - 1 : null);
+  }
+
+  function showHome() {
+    $('lessonView').hidden = true;
+    $('homeView').hidden = false;
+    $('headerLink').textContent = 'Все уроки ↓';
+    $('headerLink').setAttribute('href', '#lessons');
+    document.body.classList.remove('mode-long', 'toc-open', 'fullscreen-mode');
+    document.title = HOME_TITLE;
+    window.scrollTo({ top: 0 });
+  }
+
+  function openLesson(id, data, n) {
+    setupUI();
+    $('homeView').hidden = true;
+    $('lessonView').hidden = false;
+    $('headerLink').textContent = '← Все уроки';
+    $('headerLink').setAttribute('href', '#/');
+
+    if (currentId !== id) {
+      lesson = data; currentId = id;
+      document.title = lesson.shortTitle + ' — Атлас стоматолога';
+      $('lessonTitle').innerHTML = esc(lesson.shortTitle) + '<small>Урок ' + esc(lesson.number) + '</small>';
+      $('tocList').innerHTML = lesson.slides.map(function (sl, i) {
+        return '<li><button type="button" data-i="' + i + '">' + esc(sl.tocTitle || sl.title) + '</button></li>';
+      }).join('');
+      idx = n !== null && n >= 0 && n < lesson.slides.length ? n : 0;
+      setMode(store('atlas-mode') === 'long');
+      window.scrollTo({ top: 0 });
+    } else {
+      document.body.classList.toggle('mode-long', longMode);
+      if (n !== null) goTo(n, false, true);
+    }
+  }
+
+  /* ---------- Обработчики (навешиваются один раз) ---------- */
+  function setupUI() {
+    if (uiReady) return;
+    uiReady = true;
+
+    $('tocList').addEventListener('click', function (e) {
+      var b = e.target.closest('button[data-i]');
+      if (!b) return;
+      goTo(+b.getAttribute('data-i'));
+      document.body.classList.remove('toc-open');
+      $('tocToggle').setAttribute('aria-expanded', 'false');
+    });
+    $('prevBtn').addEventListener('click', function () { goTo(idx - 1); });
+    $('nextBtn').addEventListener('click', function () { goTo(idx + 1); });
+    $('modeBtn').addEventListener('click', function () { setMode(!longMode); });
+    $('fsBtn').addEventListener('click', toggleFullscreen);
+    $('tocToggle').addEventListener('click', function () {
+      var open = document.body.classList.toggle('toc-open');
+      this.setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('fullscreenchange', function () {
+      if (!document.fullscreenElement && document.body.classList.contains('fullscreen-mode')) {
+        document.body.classList.remove('fullscreen-mode');
+        $('fsBtn').textContent = 'На весь экран';
+      }
+    });
+  }
+
+  /* ---------- Рендер слайдов ---------- */
+  function slideHTML(sl, i) {
+    return '<article class="slide" id="slide-' + (i + 1) + '" aria-label="' + esc(sl.title) + '">' +
+      (sl.kicker ? '<div class="kicker">' + esc(sl.kicker) + '</div>' : '') +
+      '<h2>' + esc(sl.title) + '</h2>' + sl.html + '</article>';
+  }
+
+  function mountWidgets(scope) {
+    var f = scope.querySelector('[data-fdi]');
+    if (f) buildFDI(f);
+    var g = scope.querySelector('[data-glossary]');
+    if (g) buildGlossary(g);
+  }
+
+  function render() {
+    var area = $('slideArea');
+    area.innerHTML = longMode ? lesson.slides.map(slideHTML).join('') : slideHTML(lesson.slides[idx], idx);
+    mountWidgets(area);
+    updateChrome();
+  }
+
+  function updateChrome() {
+    var n = lesson.slides.length;
+    $('counter').textContent = (idx + 1) + ' / ' + n;
+    $('progressBar').style.width = ((idx + 1) / n * 100) + '%';
+    $('prevBtn').disabled = idx === 0;
+    $('nextBtn').disabled = idx === n - 1;
+    var btns = $('tocList').querySelectorAll('button');
+    for (var i = 0; i < btns.length; i++) {
+      if (i === idx) btns[i].setAttribute('aria-current', 'true');
+      else btns[i].removeAttribute('aria-current');
+    }
+  }
+
+  function goTo(n, fromToc, fromHash) {
+    n = Math.max(0, Math.min(lesson.slides.length - 1, n));
+    idx = n;
+    if (longMode) {
+      updateChrome();
+      var el = $('slide-' + (n + 1));
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
+    render();
+    if (!fromHash) history.replaceState(null, '', '#/' + currentId + '/' + (n + 1));
+    window.scrollTo({ top: 0 });
+  }
+
+  function setMode(long) {
+    longMode = long;
+    document.body.classList.toggle('mode-long', long);
+    $('modeBtn').setAttribute('aria-pressed', String(long));
+    $('modeBtn').textContent = long ? 'Слайды' : 'Лонгрид';
+    store('atlas-mode', long ? 'long' : 'slides');
+    render();
+    if (long && idx > 0) {
+      var el = $('slide-' + (idx + 1));
+      if (el) el.scrollIntoView({ block: 'start' });
+    }
+  }
+
+  /* ---------- Клавиатура и полноэкранный режим ---------- */
+  function onKey(e) {
+    if ($('lessonView').hidden) return;
+    var t = e.target;
+    if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+    if (e.ctrlKey || e.metaKey || e.altKey) return;
+    if (e.key === 'ArrowRight' || e.key === 'PageDown') { if (!longMode) { e.preventDefault(); goTo(idx + 1); } }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { if (!longMode) { e.preventDefault(); goTo(idx - 1); } }
+    else if (e.key === 'Home' && !longMode) goTo(0);
+    else if (e.key === 'End' && !longMode) goTo(lesson.slides.length - 1);
+    else if (e.key === 'f' || e.key === 'F') toggleFullscreen();
+    else if (e.key === 'Escape') document.body.classList.remove('toc-open');
+  }
+
+  function toggleFullscreen() {
+    var on = !document.body.classList.contains('fullscreen-mode');
+    document.body.classList.toggle('fullscreen-mode', on);
+    $('fsBtn').textContent = on ? 'Выйти из полного экрана' : 'На весь экран';
+    try {
+      if (on && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+      else if (!on && document.fullscreenElement && document.exitFullscreen) document.exitFullscreen();
+    } catch (err) { /* режим работает и без Fullscreen API */ }
+  }
+
+  /* ---------- Виджет: интерактивная схема FDI ---------- */
+  var UPPER = [18, 17, 16, 15, 14, 13, 12, 11, 21, 22, 23, 24, 25, 26, 27, 28];
+  var LOWER = [48, 47, 46, 45, 44, 43, 42, 41, 31, 32, 33, 34, 35, 36, 37, 38];
+  var QUAD_NAME = { 1: 'верхняя правая', 2: 'верхняя левая', 3: 'нижняя левая', 4: 'нижняя правая' };
+
+  function universal(q, p) {
+    if (q === 1) return 9 - p;
+    if (q === 2) return 8 + p;
+    if (q === 3) return 25 - p;
+    return 24 + p;
+  }
+
+  function buildFDI(root) {
+    var T = lesson.teeth;
+    var rowHTML = function (arr, cls) {
+      return '<div class="fdi-row ' + cls + '">' + arr.map(function (code, i) {
+        return '<button type="button" class="fdi-tooth g-' + T[code % 10 - 1].group + (i === 8 ? ' fdi-mid' : '') +
+          '" data-code="' + code + '" aria-pressed="false" aria-label="Зуб ' + code + '">' + code + '</button>';
+      }).join('') + '</div>';
+    };
+    root.innerHTML =
+      '<div class="fdi-axis"><span>Правая сторона пациента</span><span>Левая сторона пациента</span></div>' +
+      rowHTML(UPPER, 'upper') + rowHTML(LOWER, 'lower') +
+      '<div class="fdi-legend"><span><i style="background:#f7fbfe"></i>резцы</span><span><i style="background:#eef5ea"></i>клыки</span>' +
+      '<span><i style="background:#fbf3df"></i>премоляры</span><span><i style="background:#f6e6e8"></i>моляры</span>' +
+      '<span>Красная линия — срединная плоскость</span></div>' +
+      '<div class="fdi-info" id="fdiInfo" aria-live="polite"><h4>Выберите зуб</h4>' +
+      '<p>Нажмите на любой номер на схеме — появятся название, латинский термин, номера в других системах и сроки прорезывания.</p></div>';
+
+    root.addEventListener('click', function (e) {
+      var b = e.target.closest('.fdi-tooth');
+      if (!b) return;
+      var all = root.querySelectorAll('.fdi-tooth');
+      for (var i = 0; i < all.length; i++) all[i].setAttribute('aria-pressed', 'false');
+      b.setAttribute('aria-pressed', 'true');
+      showTooth(+b.getAttribute('data-code'), T);
+    });
+  }
+
+  function showTooth(code, T) {
+    var q = Math.floor(code / 10), pos = code % 10, t = T[pos - 1];
+    var upper = q <= 2, d = upper ? t.upper : t.lower;
+    $('fdiInfo').innerHTML =
+      '<h4>Зуб ' + code + ' · читается «' + q + '–' + pos + '»</h4>' +
+      '<div class="name">' + esc(t.name) + ' <small style="font-size:15px;font-weight:400;color:#6b7280;font-style:italic">' + esc(t.latin) + '</small></div>' +
+      '<dl><dt>Положение</dt><dd>' + QUAD_NAME[q] + ' четверть (' + (upper ? 'верхняя' : 'нижняя') + ' челюсть)</dd>' +
+      '<dt>FDI / ISO 3950</dt><dd>' + code + '</dd>' +
+      '<dt>Универсальная</dt><dd>№ ' + universal(q, pos) + '</dd>' +
+      '<dt>Зигмонди–Палмер</dt><dd><span class="palmer-sym q' + q + '">' + pos + '</span></dd>' +
+      '<dt>Корни</dt><dd>' + esc(d.roots) + '</dd><dt>Коронка</dt><dd>' + esc(d.crown) + '</dd>' +
+      '<dt>Прорезывание</dt><dd>' + esc(d.eruption) + '</dd></dl>';
+  }
+
+  /* ---------- Виджет: глоссарий с поиском ---------- */
+  function buildGlossary(root) {
+    var terms = lesson.glossary.slice().sort(function (a, b) { return a.term.localeCompare(b.term, 'ru'); });
+    root.innerHTML =
+      '<label for="gSearch" style="position:absolute;left:-9999px">Поиск по терминам</label>' +
+      '<input id="gSearch" class="glossary-search" type="search" placeholder="Поиск по терминам (на русском или латыни)…" autocomplete="off">' +
+      '<div class="glossary-count" id="gCount"></div><div class="glossary"><dl id="gList"></dl></div>';
+    var list = root.querySelector('#gList'), count = root.querySelector('#gCount'), input = root.querySelector('#gSearch');
+
+    function draw(q) {
+      q = q.trim().toLowerCase();
+      var shown = terms.filter(function (t) {
+        return !q || t.term.toLowerCase().indexOf(q) > -1 || (t.latin || '').toLowerCase().indexOf(q) > -1 || t.def.toLowerCase().indexOf(q) > -1;
+      });
+      count.textContent = shown.length === terms.length ? 'Всего терминов: ' + terms.length : 'Найдено: ' + shown.length + ' из ' + terms.length;
+      list.innerHTML = shown.length ? shown.map(function (t) {
+        return '<div class="term"><dt>' + esc(t.term) + (t.latin ? '<small>' + esc(t.latin) + '</small>' : '') + '</dt><dd>' + esc(t.def) + '</dd></div>';
+      }).join('') : '<div class="empty">Ничего не найдено. Попробуйте другое слово.</div>';
+    }
+    input.addEventListener('input', function () { draw(input.value); });
+    draw('');
+  }
+
+  /* ---------- Запуск ---------- */
+  buildHome();
+  window.addEventListener('hashchange', route);
+  route();
+})();
+
+  </script>
+</body>
+</html>
