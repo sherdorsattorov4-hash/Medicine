@@ -290,7 +290,250 @@ body.fullscreen-mode .slide .lead { font-size: 22px; }
 }
 
 [hidden] { display: none !important; }
-  </style>
+  
+/* ==========================================================================
+   НОВОЕ: закреплённая шапка, вкладки «Анатомия» / «Уроки», модуль «Анатомия».
+   Всё ниже добавлено поверх ваших стилей; существующие правила не менялись.
+   Работает и без Tailwind CDN (все размеры и отступы заданы явно).
+   ========================================================================== */
+:root { --header-h: 72px; }   /* точная высота шапки подставляется скриптом */
+
+/* ---------- Закреплённая шапка и вкладки ---------- */
+.site-header { position: sticky; top: 0; z-index: 60; }
+.header-link { display: none; }  /* дублируется вкладкой «Уроки»; элемент оставлен для маршрутизатора уроков */
+
+.main-tabs { display: flex; gap: 6px; }
+.main-tab {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 16px; border-radius: 4px; border: 1px solid rgba(255,255,255,.3);
+  font-family: var(--font-ui); font-size: 14.5px; font-weight: 600; line-height: 1.2;
+  color: #fff; text-decoration: none; background: transparent;
+}
+.main-tab:hover { background: rgba(255,255,255,.12); }
+.main-tab[aria-current="page"] { background: var(--paper); color: var(--ink); border-color: var(--paper); }
+.main-tab svg { width: 18px; height: 18px; flex: none; display: block; }
+.main-tab:focus-visible { outline-color: #fff; }
+
+@media (max-width: 720px) {
+  .site-header .wrap { flex-wrap: wrap; padding: 10px 14px; gap: 10px; }
+  .brand-sub { display: none; }
+  .brand-title { font-size: 19px; line-height: 1.25; }
+  .main-tabs { width: 100%; }
+  .main-tab { flex: 1; justify-content: center; }
+}
+
+/* Просмотр урока под закреплённой шапкой */
+.lesson-shell { min-height: calc(100vh - var(--header-h)); }
+.toc { top: var(--header-h); height: calc(100vh - var(--header-h)); }
+.toolbar { top: var(--header-h); }
+.slide { scroll-margin-top: calc(var(--header-h) + 76px); }
+@media (max-width: 900px) {
+  .toc { top: var(--header-h); height: calc(100vh - var(--header-h)); }
+}
+
+/* ---------- Переключение вкладок ---------- */
+html[data-tab="anatomy"] #homeView,
+html[data-tab="anatomy"] #lessonView { display: none !important; }
+html[data-tab="lessons"] #anatomyView { display: none !important; }
+
+/* ---------- Фильтр каталога уроков (из карточки анатомии) ---------- */
+.atl-filter { max-width: 1180px; margin: 0 auto; padding: 4px 20px 0; }
+.atl-filter-inner {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap;
+  border: 1px solid var(--line); border-left: 5px solid var(--gold); background: #faf4e4;
+  padding: 12px 16px; border-radius: 0 4px 4px 0;
+}
+.atl-filter-text { margin: 0; font-family: var(--font-ui); font-size: 14.5px; line-height: 1.5; color: var(--ink); flex: 1 1 260px; }
+.atl-filter-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.atl-filter .btn { text-decoration: none; display: inline-block; }
+.lesson-card.atl-hidden { display: none; }
+.lesson-card.atl-match { box-shadow: 0 0 0 2px var(--gold), var(--shadow); }
+
+/* ---------- Модуль «Анатомия» ---------- */
+.atl-intro { max-width: 1180px; margin: 0 auto; padding: 34px 20px 20px; }
+.atl-intro h1 { font-family: var(--font-head); font-size: clamp(30px, 4.4vw, 46px); line-height: 1.12; margin: 0 0 10px; font-weight: 700; }
+.atl-intro p { margin: 0; max-width: 40em; color: var(--ink-soft); font-size: 18px; line-height: 1.6; }
+
+.atl-grid {
+  max-width: 1180px; margin: 0 auto; padding: 0 20px 64px;
+  display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); align-items: start;
+}
+@media (min-width: 960px) {
+  .atl-grid { grid-template-columns: minmax(380px, 520px) minmax(0, 1fr); gap: 36px; }
+  .atl-plate-col { position: sticky; top: calc(var(--header-h) + 16px); }
+}
+
+/* Табула: рамка как у печатной анатомической таблицы */
+.atl-plate {
+  position: relative; margin: 0; background: var(--card);
+  border: 1px solid var(--line); border-radius: 4px; box-shadow: var(--shadow);
+  padding: 16px 14px 10px;
+}
+.atl-plate::before {
+  content: ""; position: absolute; inset: 7px; border: 1px solid var(--line); border-radius: 2px; pointer-events: none;
+}
+.atl-cap {
+  position: relative; margin: 6px 6px 4px; font-family: var(--font-ui); font-size: 12.5px; line-height: 1.45; color: var(--muted); text-align: center;
+}
+.atl-cap b { color: var(--ink); font-weight: 600; }
+
+.atl-svg {
+  display: block; width: 100%; height: auto; margin: 0 auto;
+  max-height: calc(100vh - var(--header-h) - 120px); min-height: 360px;
+  user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
+}
+.atl-svg.is-cropped {
+  max-height: none; min-height: 0;
+  -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+          mask-image: linear-gradient(to bottom, #000 80%, transparent 100%);
+}
+
+/* тело */
+.atl-svg .b-out { fill: var(--ink-soft); stroke: var(--ink-soft); stroke-linejoin: round; stroke-linecap: round; }
+.atl-svg .b-fill { fill: var(--paper-2); stroke: var(--paper-2); stroke-linejoin: round; stroke-linecap: round; }
+.atl-svg .midline { stroke: var(--line); stroke-width: 1; stroke-dasharray: 3 6; fill: none; }
+
+/* органы */
+.atl-svg .o-brain { fill: #ecd3cd; stroke: #8a5a55; stroke-width: 1.6; }
+.atl-svg .o-gyri { fill: none; stroke: #a77b75; stroke-width: 1.4; stroke-linecap: round; }
+.atl-svg .o-fissure { stroke-width: 1.8; }
+.atl-svg .o-jaw { fill: none; stroke: #a08a5f; stroke-width: 2.2; stroke-linecap: round; }
+.atl-svg .o-tooth { fill: #fff; stroke: #6b7a92; stroke-width: 1; stroke-linejoin: round; }
+.atl-svg .o-target { fill: none; stroke: var(--gold); stroke-width: 1.6; stroke-dasharray: 4 3; }
+.atl-svg .o-zoomline { stroke: var(--gold); stroke-width: 1.4; stroke-dasharray: 4 3; }
+.atl-svg .o-loupe-bg { fill: #fff; }
+.atl-svg .o-gum { fill: #e7b3ae; }
+.atl-svg .o-bite { fill: #8f4b52; opacity: .5; }
+.atl-svg .o-loupe-ring { fill: none; stroke: var(--ink-soft); stroke-width: 3; }
+.atl-svg .o-rib { fill: none; stroke: #b4a784; stroke-width: 3.2; stroke-linecap: round; }
+.atl-svg .o-bone-thick { fill: none; stroke: #b4a784; stroke-width: 5; stroke-linecap: round; }
+.atl-svg .o-sternum { fill: #e6ddc4; stroke: #a89b78; stroke-width: 1.4; stroke-linejoin: round; }
+.atl-svg .o-lung { fill: #dde6ef; stroke: #98a7ba; stroke-width: 1.3; }
+.atl-svg .o-heart { fill: var(--accent); stroke: #5e1b24; stroke-width: 1.6; }
+.atl-svg .o-heart-line { fill: none; stroke: #c9737d; stroke-width: 2; stroke-linecap: round; }
+.atl-svg .o-vein { fill: none; stroke: #6f82ab; stroke-width: 8; stroke-linecap: round; }
+.atl-svg .o-artery { fill: none; stroke: #b5444f; stroke-width: 9; stroke-linecap: round; }
+.atl-svg .o-liver { fill: #a8704f; stroke: #6d452f; stroke-width: 1.6; }
+.atl-svg .o-gall { fill: #8c9b52; stroke: #5c6a30; stroke-width: 1.2; }
+.atl-svg .o-stomach { fill: #d49a92; stroke: #8d5a54; stroke-width: 1.6; }
+.atl-svg .o-colon { fill: none; stroke: #9c7a47; stroke-width: 17; stroke-linecap: round; stroke-linejoin: round; }
+.atl-svg .o-colon-in { fill: none; stroke: #e3c595; stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; }
+.atl-svg .o-small { fill: none; stroke: #e5b3a0; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; }
+.atl-svg .o-diaphragm { fill: none; stroke: #6b7a92; stroke-width: 1.4; stroke-dasharray: 5 4; }
+
+/* подписи и выноски */
+.atl-svg .leader { stroke: var(--muted); stroke-width: 1.2; opacity: .85; }
+.atl-svg .dot { fill: var(--accent); stroke: #fff; stroke-width: 1.6; transition: r .15s; }
+.atl-svg .callout-name { font-family: var(--font-head); font-weight: 700; font-size: 19px; fill: var(--ink); transition: fill .15s; }
+.atl-svg .callout-lat { font-family: var(--font-body); font-style: italic; font-size: 14px; fill: var(--muted); }
+
+/* интерактивные области */
+.atl-svg .zone { cursor: pointer; outline: none; }
+.atl-svg .zone .art { transition: opacity .2s; }
+.atl-svg .zone .hit {
+  fill: transparent; stroke: transparent; stroke-width: 2; stroke-linejoin: round;
+  transition: fill .15s, stroke .15s;
+}
+.atl-svg .zone:hover .hit,
+.atl-svg .zone.is-hover .hit { fill: rgba(140, 47, 57, .10); stroke: rgba(140, 47, 57, .55); }
+.atl-svg .zone.is-active .hit { fill: rgba(140, 47, 57, .14); stroke: var(--accent); stroke-width: 2.6; }
+.atl-svg .zone:focus-visible .hit { fill: rgba(176, 141, 87, .16); stroke: var(--gold); stroke-width: 3.5; }
+.atl-svg .zone:hover .callout-name,
+.atl-svg .zone.is-hover .callout-name,
+.atl-svg .zone.is-active .callout-name { fill: var(--accent); }
+.atl-svg .zone.is-active .dot { r: 6.5; }
+.atl-plate.has-selection .zone:not(.is-active) .art { opacity: .55; }
+
+/* телефон: показываем только фигуру, подписи заменяет список областей */
+@media (max-width: 639px) {
+  .atl-svg .callout-text, .atl-svg .leader, .atl-svg .loupe,
+  .atl-svg .hit-loupe, .atl-svg .o-target { display: none; }
+  .atl-plate { padding: 12px 8px 6px; }
+}
+
+/* ---------- Карточка области ---------- */
+.atl-card {
+  background: var(--card); border: 1px solid var(--line); border-top: 5px solid var(--accent);
+  border-radius: 4px; box-shadow: var(--shadow); min-width: 0;
+  scroll-margin-top: calc(var(--header-h) + 12px);
+}
+.atl-zones { display: flex; flex-wrap: wrap; gap: 8px; padding: 18px 24px 16px; border-bottom: 1px solid var(--line); background: var(--paper); }
+.atl-panel { padding: 22px 28px 30px; }
+.atl-panel.is-fresh { animation: atl-in .22s ease-out; }
+@keyframes atl-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.atl-title { font-family: var(--font-head); font-size: clamp(26px, 3.2vw, 34px); line-height: 1.2; margin: 0; font-weight: 700; }
+.atl-latin { margin: 4px 0 16px; font-style: italic; color: var(--muted); font-size: 17px; }
+.atl-lead { margin: 0 0 6px; font-size: 18.5px; line-height: 1.6; color: var(--ink-soft); }
+.atl-h3 { font-family: var(--font-head); font-size: 20px; line-height: 1.3; margin: 26px 0 10px; color: var(--accent); font-weight: 700; }
+
+.atl-list { list-style: none; margin: 0; padding: 0; }
+.atl-list li { position: relative; padding-left: 20px; margin: 0 0 8px; line-height: 1.55; }
+.atl-list li::before { content: ""; position: absolute; left: 2px; top: .62em; width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+
+.atl-dl { margin: 0; }
+.atl-dl > div { padding: 10px 0; border-top: 1px solid var(--line); }
+.atl-dl > div:first-child { border-top: 0; padding-top: 0; }
+.atl-dl dt { margin: 0; font-family: var(--font-head); font-weight: 700; font-size: 17px; }
+.atl-dl dt small { font-family: var(--font-body); font-style: italic; font-weight: 400; font-size: 14.5px; color: var(--muted); margin-left: 6px; }
+.atl-dl dd { margin: 3px 0 0; font-size: 16px; line-height: 1.5; color: var(--ink-soft); }
+
+.atl-panel .callout { margin-top: 24px; }
+.atl-panel .callout p { margin: 0; line-height: 1.55; }
+
+.atl-lessons { list-style: none; margin: 0 0 12px; padding: 0; }
+.atl-lessons li {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px;
+  padding: 9px 0; border-top: 1px solid var(--line); font-size: 16px; line-height: 1.4;
+}
+.atl-lessons li:first-child { border-top: 0; }
+.atl-lessons a { color: var(--ink); font-weight: 600; text-decoration-color: var(--gold); }
+.atl-lessons a:hover { color: var(--accent); }
+.atl-lessons .soon { color: var(--muted); }
+.atl-status {
+  flex: none; font-family: var(--font-ui); font-size: 12px; font-weight: 600; padding: 2px 8px;
+  border: 1px solid var(--line); border-radius: 3px; color: var(--muted); background: var(--paper);
+}
+.atl-status.ready { color: #2f6b3f; border-color: #b9d4bf; background: #eef6ef; }
+.atl-none { margin: 0 0 6px; color: var(--ink-soft); font-size: 16px; line-height: 1.55; }
+
+.atl-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 0; }
+.atl-chips-label { flex-basis: 100%; font-family: var(--font-ui); font-size: 13px; color: var(--muted); }
+.atl-chip {
+  display: inline-block; padding: 5px 11px; border: 1px solid var(--line); border-radius: 4px; background: var(--paper);
+  font-family: var(--font-ui); font-size: 13.5px; font-weight: 500; color: var(--ink); text-decoration: none;
+}
+.atl-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+.atl-cta { margin-top: 20px; padding: 12px 20px; font-size: 15px; font-weight: 600; }
+.atl-to-plate { display: none; margin: 0 0 14px; }
+@media (max-width: 959px) { .atl-to-plate { display: inline-block; } }
+
+.atl-empty p { margin: 12px 0 0; font-size: 17.5px; line-height: 1.6; color: var(--ink-soft); }
+.atl-sr { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 640px) {
+  .atl-zones { padding: 14px 14px 12px; }
+  .atl-panel { padding: 18px 16px 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .atl-panel.is-fresh { animation: none; }
+  .atl-svg .zone .hit, .atl-svg .zone .art, .atl-svg .dot, .atl-svg .callout-name { transition: none; }
+}
+@media print {
+  #anatomyView { display: none !important; }
+}
+
+</style>
+  <!-- Вкладка по умолчанию при заходе на сайт без адреса: 'anatomy' или 'lessons' -->
+  <script>
+    window.__ATLAS_DEFAULT_TAB = 'anatomy';
+    (function () {
+      var h = location.hash;
+      var t = (h === '' || h === '#') ? window.__ATLAS_DEFAULT_TAB : (/^#anatomy(\/|$)/.test(h) ? 'anatomy' : 'lessons');
+      document.documentElement.setAttribute('data-tab', t);   // до первой отрисовки — без «мигания» вкладок
+    })();
+  </script>
 </head>
 <body>
   <header class="site-header">
@@ -302,9 +545,190 @@ body.fullscreen-mode .slide .lead { font-size: 22px; }
           <span class="brand-sub block">Учебные материалы для студентов-медиков</span>
         </span>
       </a>
+      <nav class="main-tabs" id="mainTabs" aria-label="Разделы сайта">
+        <a class="main-tab" href="#anatomy" data-tab="anatomy">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="4.5" r="2.5"/><path d="M12 8v7M7 10.5l5-2.5 5 2.5M9.5 21l2.5-6 2.5 6"/></svg>
+          <span>Анатомия</span>
+        </a>
+        <a class="main-tab" href="#/" data-tab="lessons">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H11v15H5.5A1.5 1.5 0 0 0 4 20.5z"/><path d="M20 5.5A1.5 1.5 0 0 0 18.5 4H13v15h5.5a1.5 1.5 0 0 1 1.5 1.5z"/></svg>
+          <span>Уроки</span>
+        </a>
+      </nav>
       <a class="header-link" id="headerLink" href="#lessons">Все уроки ↓</a>
     </div>
   </header>
+
+  <!-- ===== Вид 0: «Анатомия» — интерактивный атлас тела ===== -->
+  <div id="anatomyView" hidden>
+    <main>
+      <section class="atl-intro">
+        <h1>Атлас тела человека</h1>
+        <p>Нажмите на область схемы — откроется карточка с названием, функциями, строением и ссылками на уроки по теме.</p>
+      </section>
+      <div class="atl-grid">
+        <div class="atl-plate-col">
+          <figure class="atl-plate" id="atlasPlate">
+<svg id="atlasSvg" class="atl-svg" viewBox="0 0 700 980" xmlns="http://www.w3.org/2000/svg" role="group" aria-label="Интерактивная схема тела человека, вид спереди" preserveAspectRatio="xMidYMid meet">
+<defs></defs>
+<g class="body"><g class="b-out" stroke-width="4.8">
+<path d="M350 30 C386 30 402 62 401 94 C400 120 392 138 376 152 C368 160 360 164 350 164 C340 164 332 160 324 152 C308 138 300 120 299 94 C298 62 314 30 350 30 Z"/>
+<ellipse cx="297" cy="100" rx="6.5" ry="14"/>
+<ellipse cx="403" cy="100" rx="6.5" ry="14"/>
+<path d="M328 148 L328 204 L372 204 L372 148 Z"/>
+<path d="M328 194 C308 202 282 204 258 212 C242 218 236 236 244 254 L272 270 C275 322 279 380 284 432 C285 476 276 510 268 552 L432 552 C424 510 415 476 416 432 C421 380 425 322 428 270 L456 254 C464 236 458 218 442 212 C418 204 392 202 372 194 Z"/>
+<path d="M328 540 L328 598 Q350 622 372 598 L372 540 Z"/>
+<ellipse cx="198" cy="530" rx="15" ry="26" transform="rotate(-4 198 530)"/>
+<ellipse cx="270" cy="940" rx="32" ry="14"/>
+<ellipse cx="502" cy="530" rx="15" ry="26" transform="rotate(4 502 530)"/>
+<ellipse cx="430" cy="940" rx="32" ry="14"/>
+<line x1="244" y1="228" x2="216" y2="368" stroke-width="46.8" fill="none"/>
+<line x1="216" y1="368" x2="198" y2="500" stroke-width="36.8" fill="none"/>
+<line x1="306" y1="556" x2="284" y2="750" stroke-width="80.8" fill="none"/>
+<line x1="284" y1="750" x2="276" y2="906" stroke-width="54.8" fill="none"/>
+<line x1="456" y1="228" x2="484" y2="368" stroke-width="46.8" fill="none"/>
+<line x1="484" y1="368" x2="502" y2="500" stroke-width="36.8" fill="none"/>
+<line x1="394" y1="556" x2="416" y2="750" stroke-width="80.8" fill="none"/>
+<line x1="416" y1="750" x2="424" y2="906" stroke-width="54.8" fill="none"/>
+</g>
+<g class="b-fill" stroke-width="0.6">
+<path d="M350 30 C386 30 402 62 401 94 C400 120 392 138 376 152 C368 160 360 164 350 164 C340 164 332 160 324 152 C308 138 300 120 299 94 C298 62 314 30 350 30 Z"/>
+<ellipse cx="297" cy="100" rx="6.5" ry="14"/>
+<ellipse cx="403" cy="100" rx="6.5" ry="14"/>
+<path d="M328 148 L328 204 L372 204 L372 148 Z"/>
+<path d="M328 194 C308 202 282 204 258 212 C242 218 236 236 244 254 L272 270 C275 322 279 380 284 432 C285 476 276 510 268 552 L432 552 C424 510 415 476 416 432 C421 380 425 322 428 270 L456 254 C464 236 458 218 442 212 C418 204 392 202 372 194 Z"/>
+<path d="M328 540 L328 598 Q350 622 372 598 L372 540 Z"/>
+<ellipse cx="198" cy="530" rx="15" ry="26" transform="rotate(-4 198 530)"/>
+<ellipse cx="270" cy="940" rx="32" ry="14"/>
+<ellipse cx="502" cy="530" rx="15" ry="26" transform="rotate(4 502 530)"/>
+<ellipse cx="430" cy="940" rx="32" ry="14"/>
+<line x1="244" y1="228" x2="216" y2="368" stroke-width="42" fill="none"/>
+<line x1="216" y1="368" x2="198" y2="500" stroke-width="32" fill="none"/>
+<line x1="306" y1="556" x2="284" y2="750" stroke-width="76" fill="none"/>
+<line x1="284" y1="750" x2="276" y2="906" stroke-width="50" fill="none"/>
+<line x1="456" y1="228" x2="484" y2="368" stroke-width="42" fill="none"/>
+<line x1="484" y1="368" x2="502" y2="500" stroke-width="32" fill="none"/>
+<line x1="394" y1="556" x2="416" y2="750" stroke-width="76" fill="none"/>
+<line x1="416" y1="750" x2="424" y2="906" stroke-width="50" fill="none"/>
+</g></g>
+<line class="midline" x1="350" y1="14" x2="350" y2="966"/>
+<g class="zone" data-zone="abdomen" role="button" tabindex="0" aria-pressed="false" aria-label="Брюшная полость">
+<g class="art"><path class="o-liver" d="M288 360 C300 350 340 350 372 358 C380 362 380 372 370 380 C350 396 322 402 296 396 C286 390 284 372 288 360 Z"/>
+<ellipse class="o-gall" cx="322" cy="404" rx="6" ry="9"/>
+<path class="o-stomach" d="M368 372 C396 364 422 380 416 408 C412 430 386 438 366 426 C358 421 362 412 372 413 C386 414 394 404 388 394 C382 385 366 386 368 372 Z"/>
+<path class="o-colon" d="M302 524 L300 420 C300 408 312 404 322 410 C340 426 362 426 380 410 C390 404 402 408 402 420 L400 500 C400 524 372 538 356 524 C346 516 352 500 360 506"/>
+<path class="o-colon-in" d="M302 524 L300 420 C300 408 312 404 322 410 C340 426 362 426 380 410 C390 404 402 408 402 420 L400 500 C400 524 372 538 356 524 C346 516 352 500 360 506"/>
+<path class="o-small" d="M322 452 C340 440 362 460 384 448 C394 464 372 472 352 468 C332 464 322 476 330 486 C344 496 372 484 384 492 C380 508 352 512 334 504"/>
+<path class="o-diaphragm" d="M280 352 C310 332 390 332 420 352"/></g>
+<g class="callout"><line class="leader" x1="512" y1="445" x2="400" y2="452"/><circle class="dot" cx="400" cy="452" r="4.5"/><text class="callout-text callout-name" x="520" y="452">Брюшная полость</text><text class="callout-text callout-lat" x="520" y="472">Cavitas abdominalis</text></g>
+<path class="hit" d="M279 352 C310 336 390 336 421 352 L416 432 C415 476 424 510 432 552 L268 552 C276 510 285 476 284 432 Z"/>
+</g>
+<g class="zone" data-zone="thorax" role="button" tabindex="0" aria-pressed="false" aria-label="Сердце и грудная клетка">
+<g class="art"><path class="o-lung" d="M340 232 C318 226 292 238 284 266 C277 296 281 326 296 342 C310 350 332 348 342 338 Z"/><path class="o-lung" d="M360 232 C382 226 408 238 416 266 C423 296 419 326 404 342 C392 348 372 346 362 336 Z"/><path class="o-rib" d="M341 236 C324.7 231 304 240 305.4 260"/>
+<path class="o-rib" d="M341 244.2 C319.2 239.2 294 248.2 295.7 269.1"/>
+<path class="o-rib" d="M341 252.4 C315.4 247.4 287 256.4 288.9 278.2"/>
+<path class="o-rib" d="M341 260.6 C313.1 255.6 283 264.6 285 287.3"/>
+<path class="o-rib" d="M341 268.8 C312.1 263.8 281 272.8 283.1 296.4"/>
+<path class="o-rib" d="M341 277 C312.1 272 281 281 283.1 305.5"/>
+<path class="o-rib" d="M341 285.2 C313.1 280.2 283 289.2 285 314.6"/>
+<path class="o-rib" d="M341 293.4 C315.4 288.4 287 297.4 288.9 323.7"/>
+<path class="o-rib" d="M341 301.6 C318.6 296.6 293 305.6 294.7 332.8"/>
+<path class="o-rib" d="M341 309.8 C323.1 304.8 301 313.8 302.5 341.9"/>
+<path class="o-rib" d="M359 236 C375.3 231 396 240 394.6 260"/>
+<path class="o-rib" d="M359 244.2 C380.8 239.2 406 248.2 404.3 269.1"/>
+<path class="o-rib" d="M359 252.4 C384.6 247.4 413 256.4 411.1 278.2"/>
+<path class="o-rib" d="M359 260.6 C386.9 255.6 417 264.6 415 287.3"/>
+<path class="o-rib" d="M359 268.8 C387.9 263.8 419 272.8 416.9 296.4"/>
+<path class="o-rib" d="M359 277 C387.9 272 419 281 416.9 305.5"/>
+<path class="o-rib" d="M359 285.2 C386.9 280.2 417 289.2 415 314.6"/>
+<path class="o-rib" d="M359 293.4 C384.6 288.4 413 297.4 411.1 323.7"/>
+<path class="o-rib" d="M359 301.6 C381.4 296.6 407 305.6 405.3 332.8"/>
+<path class="o-rib" d="M359 309.8 C376.9 304.8 399 313.8 397.5 341.9"/>
+<path class="o-bone-thick" d="M344 223 C330 216 300 214 262 224"/>
+<path class="o-bone-thick" d="M356 223 C370 216 400 214 438 224"/>
+<path class="o-sternum" d="M338 217 L362 217 L358 244 L358 322 L354 342 L346 342 L342 322 L342 244 Z"/><g transform="translate(368 298) rotate(-22) scale(.86)"><path class="o-heart" d="M0 -20 C-10 -34 -34 -26 -30 -4 C-27 14 -10 30 0 40 C10 30 27 14 30 -4 C34 -26 10 -34 0 -20 Z"/><path class="o-heart-line" d="M-2 -18 C4 0 6 18 6 34"/><path class="o-heart-line" d="M-26 -6 C-14 2 -4 2 4 -2"/></g><path class="o-vein" d="M344 236 L344 276"/><path class="o-artery" d="M360 272 C358 246 372 236 386 246"/></g>
+<g class="callout"><line class="leader" x1="512" y1="269" x2="380" y2="292"/><circle class="dot" cx="380" cy="292" r="4.5"/><text class="callout-text callout-name" x="520" y="276">Сердце и</text><text class="callout-text callout-name" x="520" y="298">грудная клетка</text><text class="callout-text callout-lat" x="520" y="318">Cor · Thorax</text></g>
+<path class="hit" d="M328 196 C308 204 284 206 262 214 L272 270 C275 300 277 330 279 350 C310 334 390 334 421 350 C423 330 425 300 428 270 L438 214 C416 206 392 204 372 196 Z"/>
+</g>
+<g class="zone" data-zone="jaw" role="button" tabindex="0" aria-pressed="false" aria-label="Челюсть и зубы">
+<g class="art"><path class="o-jaw" d="M304 112 C306 138 322 158 350 160 C378 158 394 138 396 112"/><rect class="o-tooth" x="332" y="130" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="336.5" y="130" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="341" y="130" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="345.5" y="130" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="350" y="130" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="354.5" y="130" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="359" y="130" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="363.5" y="130" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="332" y="139.5" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="336.5" y="139.5" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="341" y="139.5" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="345.5" y="139.5" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="350" y="139.5" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="354.5" y="139.5" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="359" y="139.5" width="4" height="8.5" rx="1.4"/>
+<rect class="o-tooth" x="363.5" y="139.5" width="4" height="8.5" rx="1.4"/><circle class="o-target" cx="350" cy="138" r="23"/><g class="loupe"><line class="o-zoomline" x1="138.1" y1="245.1" x2="358.3" y2="159.4"/><line class="o-zoomline" x1="114.7" y1="106.1" x2="350.9" y2="115"/><clipPath id="atl-loupe-clip"><circle cx="112" cy="178" r="72"/></clipPath>
+<circle class="o-loupe-bg" cx="112" cy="178" r="72"/>
+<g clip-path="url(#atl-loupe-clip)">
+<rect class="o-gum" x="22" y="88" width="180" height="88"/>
+<rect class="o-gum" x="22" y="180" width="180" height="90"/>
+<rect class="o-tooth" x="96.4" y="149.9" width="15.6" height="27" rx="4"/>
+<rect class="o-tooth" x="83.9" y="152.9" width="12.4" height="23" rx="4"/>
+<path class="o-tooth" d="M71.1 146.4 L83.9 146.4 L83.9 167.4 L77.5 177.4 L71.1 167.4 Z"/>
+<rect class="o-tooth" x="59.6" y="153.2" width="11.5" height="19" rx="4"/>
+<rect class="o-tooth" x="48.1" y="151.6" width="11.5" height="18" rx="4"/>
+<rect class="o-tooth" x="112" y="149.9" width="15.6" height="27" rx="4"/>
+<rect class="o-tooth" x="127.6" y="152.9" width="12.4" height="23" rx="4"/>
+<path class="o-tooth" d="M140.1 146.4 L152.9 146.4 L152.9 167.4 L146.5 177.4 L140.1 167.4 Z"/>
+<rect class="o-tooth" x="152.9" y="153.2" width="11.5" height="19" rx="4"/>
+<rect class="o-tooth" x="164.4" y="151.6" width="11.5" height="18" rx="4"/>
+<rect class="o-tooth" x="102.3" y="183" width="9.7" height="20" rx="4"/>
+<rect class="o-tooth" x="91.8" y="182.6" width="10.6" height="22" rx="4"/>
+<path class="o-tooth" d="M79.3 207.7 L79.3 188.7 L85.5 178.7 L91.8 188.7 L91.8 207.7 Z"/>
+<rect class="o-tooth" x="67.8" y="180.3" width="11.5" height="19" rx="4"/>
+<rect class="o-tooth" x="56.3" y="178.5" width="11.5" height="18" rx="4"/>
+<rect class="o-tooth" x="112" y="183" width="9.7" height="20" rx="4"/>
+<rect class="o-tooth" x="121.7" y="182.6" width="10.6" height="22" rx="4"/>
+<path class="o-tooth" d="M132.2 207.7 L132.2 188.7 L138.5 178.7 L144.7 188.7 L144.7 207.7 Z"/>
+<rect class="o-tooth" x="144.7" y="180.3" width="11.5" height="19" rx="4"/>
+<rect class="o-tooth" x="156.2" y="178.5" width="11.5" height="18" rx="4"/>
+<path class="o-gum" d="M22 88 L202 88 L202 142 Q112 170 22 142 Z"/>
+<path class="o-gum" d="M22 192 Q112 220 202 192 L202 268 L22 268 Z"/>
+<rect class="o-bite" x="22" y="176" width="180" height="5"/>
+</g>
+<circle class="o-loupe-ring" cx="112" cy="178" r="72"/></g></g>
+<g class="callout"><text class="callout-text callout-name" x="112" y="274" text-anchor="middle">Челюсть и зубы</text><text class="callout-text callout-lat" x="112" y="294" text-anchor="middle">Mandibula · Dentes</text></g>
+<path class="hit" d="M300 112 L400 112 C399 128 392 140 376 152 C368 160 360 164 350 164 C340 164 332 160 324 152 C308 140 301 128 300 112 Z"/>
+<circle class="hit hit-loupe" cx="112" cy="178" r="72"/>
+</g>
+<g class="zone" data-zone="head" role="button" tabindex="0" aria-pressed="false" aria-label="Голова и головной мозг">
+<g class="art"><path class="o-brain" d="M350 40 C378 40 394 58 394 78 C394 98 382 108 366 110 C358 111 354 108 350 108 C346 108 342 111 334 110 C318 108 306 98 306 78 C306 58 322 40 350 40 Z"/>
+<path class="o-gyri" d="M314 64 Q322 53 330 62 T346 58"/>
+<path class="o-gyri" d="M386 64 Q378 53 370 62 T354 58"/>
+<path class="o-gyri" d="M312 80 Q321 69 329 79 T346 74"/>
+<path class="o-gyri" d="M388 80 Q379 69 371 79 T354 74"/>
+<path class="o-gyri" d="M316 95 Q324 86 332 95 T346 90"/>
+<path class="o-gyri" d="M384 95 Q376 86 368 95 T354 90"/>
+<path class="o-gyri" d="M326 48 Q332 54 338 48 T347 52"/>
+<path class="o-gyri" d="M374 48 Q368 54 362 48 T353 52"/>
+<path class="o-gyri o-fissure" d="M350 41 L350 107"/></g>
+<g class="callout "><line class="leader" x1="204" y1="43" x2="316" y2="62"/><circle class="dot" cx="316" cy="62" r="4.5"/><text class="callout-text callout-name" x="196" y="50" text-anchor="end">Головной мозг</text><text class="callout-text callout-lat" x="196" y="70" text-anchor="end">Encephalon</text></g>
+<path class="hit" d="M350 30 C386 30 402 62 401 94 L400 112 L300 112 L299 94 C298 62 314 30 350 30 Z"/>
+</g>
+</svg>
+            <figcaption class="atl-cap"><b>Tab. I.</b> Corpus humanum, facies anterior — тело человека, вид спереди. Схема условная.</figcaption>
+          </figure>
+        </div>
+        <section class="atl-card" id="atlasCard" aria-label="Карточка области тела">
+          <div class="atl-zones" id="atlasZones" role="group" aria-label="Области тела"></div>
+          <div class="atl-panel" id="atlasPanel"></div>
+          <p class="atl-sr" id="atlasStatus" aria-live="polite"></p>
+        </section>
+      </div>
+    </main>
+    <footer class="site-footer">
+      Схема условная и носит образовательный характер: она не заменяет анатомический атлас, учебник и лекции.
+    </footer>
+  </div>
 
   <!-- ===== Вид 1: главная ===== -->
   <div id="homeView">
@@ -1391,6 +1815,422 @@ window.LESSONS['dental-01'] = {
   route();
 })();
 
+  </script>
+  <script>
+/* ==========================================================================
+   НОВОЕ: вкладки «Анатомия» / «Уроки» и интерактивный атлас тела.
+   Не трогает код уроков: работает поверх вашего hash-маршрутизатора.
+
+   Адреса:  #anatomy            — вкладка «Анатомия»
+            #anatomy/heart      — «Анатомия» с открытой карточкой области
+            #/ , #/dental-01/7  — вкладка «Уроки» (как раньше)
+
+   Как привязать новый урок к области тела — добавьте его id в поле lessons
+   нужной области в массиве ZONES ниже (например, lessons: ['cardio-01']).
+   Вкладка, которая открывается при заходе на сайт без адреса,
+   задаётся в <head> (window.__ATLAS_DEFAULT_TAB = 'anatomy' | 'lessons').
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var root = document.documentElement;
+  var DEFAULT_TAB = window.__ATLAS_DEFAULT_TAB === 'lessons' ? 'lessons' : 'anatomy';
+
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+    });
+  };
+
+  /* ---------- Данные: области тела ---------- */
+  var ZONES = [
+    {
+      id: 'head',
+      name: 'Голова и головной мозг',
+      latin: 'Caput; Encephalon',
+      lead: 'Головной мозг лежит в полости мозгового отдела черепа и управляет работой всего организма — от дыхания и сердечного ритма до речи, памяти и мышления. Он окружён тремя оболочками и омывается спинномозговой жидкостью (ликвором).',
+      stats: [
+        ['~1,4 кг', 'масса мозга взрослого человека'],
+        ['3', 'оболочки мозга'],
+        ['12 пар', 'черепных нервов']
+      ],
+      functions: [
+        'Мышление, память, речь и сознание — работа коры больших полушарий.',
+        'Управление произвольными движениями и их координация (двигательная кора, мозжечок).',
+        'Регуляция дыхания, сердечной деятельности и тонуса сосудов — центры продолговатого мозга и моста.',
+        'Приём и обработка сигналов от органов чувств; гомеостаз и гормональная регуляция — гипоталамус и гипофиз.'
+      ],
+      structure: [
+        ['Большие полушария', 'hemispheria cerebri', 'Покрыты корой и разделены продольной щелью; доли: лобная, теменная, височная, затылочная.'],
+        ['Мозжечок', 'cerebellum', 'Координация движений, равновесие, мышечный тонус.'],
+        ['Ствол мозга', 'truncus encephali', 'Средний мозг, мост и продолговатый мозг: жизненно важные центры и ядра черепных нервов.'],
+        ['Оболочки', 'meninges', 'Твёрдая (dura mater), паутинная (arachnoidea mater) и мягкая (pia mater).']
+      ],
+      clinic: 'Тройничный нерв (n. trigeminus, V пара) — главный чувствительный нерв лица. Его ветви — верхнечелюстной (V2) и нижнечелюстной (V3) нервы — иннервируют зубы, десну и слизистую рта, поэтому именно на них основаны инфильтрационная и мандибулярная анестезии.',
+      lessons: [],
+      deep: []
+    },
+    {
+      id: 'jaw',
+      name: 'Челюсть и зубы',
+      latin: 'Maxilla, Mandibula; Dentes',
+      lead: 'Зубочелюстной аппарат образуют верхняя и нижняя челюсти, зубы, височно-нижнечелюстной сустав, жевательные мышцы и ткани пародонта. Он откусывает и измельчает пищу, участвует в речи и формирует нижнюю треть лица.',
+      stats: [
+        ['32', 'постоянных зуба у взрослого'],
+        ['20', 'молочных зубов у ребёнка'],
+        ['2', 'челюсти: верхняя и нижняя']
+      ],
+      functions: [
+        'Откусывание, разгрызание и перетирание пищи — первый этап пищеварения.',
+        'Участие в артикуляции звуков речи.',
+        'Формирование внешнего вида нижней трети лица и опора для мягких тканей.',
+        'Передача жевательной нагрузки на кость через периодонт; височно-нижнечелюстной сустав обеспечивает движения нижней челюсти.'
+      ],
+      structure: [
+        ['Верхняя челюсть', 'maxilla', 'Парная неподвижная кость лицевого черепа; содержит альвеолярный отросток и верхнечелюстную пазуху.'],
+        ['Нижняя челюсть', 'mandibula', 'Непарная подвижная кость: тело, две ветви, суставной и венечный отростки.'],
+        ['Зуб', 'dens', 'Коронка, шейка и корень; твёрдые ткани — эмаль, дентин, цемент; внутри — пульпа.'],
+        ['Зубная формула', 'formula dentalis', 'В каждой половине челюсти: 2 резца, 1 клык, 2 премоляра и 3 моляра.'],
+        ['Пародонт', 'parodontium', 'Десна, периодонт, цемент корня и альвеолярная кость удерживают зуб в лунке.']
+      ],
+      clinic: 'Нижние зубы обезболивают блокадой нижнего альвеолярного нерва (ветвь V3), верхние чаще — инфильтрационной анестезией: тонкая кортикальная пластинка верхней челюсти позволяет анестетику проникнуть к корням.',
+      lessons: ['dental-01', 'dental-02', 'dental-03'],
+      deep: [
+        { lesson: 'dental-01', match: 'Эмаль' },
+        { lesson: 'dental-01', match: 'Дентин' },
+        { lesson: 'dental-01', match: 'Пульпа' },
+        { lesson: 'dental-01', match: 'Система FDI' }
+      ]
+    },
+    {
+      id: 'thorax',
+      name: 'Сердце и грудная клетка',
+      latin: 'Cor; Thorax',
+      lead: 'Грудная клетка — костно-мышечный каркас из грудного отдела позвоночника, 12 пар рёбер и грудины. Она защищает сердце, лёгкие и крупные сосуды и участвует в дыхании. Сердце — полый мышечный орган, который нагнетает кровь по большому и малому кругам кровообращения.',
+      stats: [
+        ['4', 'камеры сердца'],
+        ['12 пар', 'рёбер'],
+        ['60–80', 'ударов в минуту в покое']
+      ],
+      functions: [
+        'Сердце: насосная функция — продвижение крови по сосудам и доставка кислорода и питательных веществ к тканям.',
+        'Автоматизм и проводимость: импульсы возникают в синусно-предсердном узле и распространяются по проводящей системе сердца.',
+        'Грудная клетка: защита органов, опора для плечевого пояса и верхних конечностей, дыхательные движения (рёбра, межрёберные мышцы, диафрагма).',
+        'Эндокринная функция предсердий — выработка натрийуретического пептида, участвующего в регуляции объёма крови.'
+      ],
+      structure: [
+        ['Камеры сердца', 'atria et ventriculi', 'Правое и левое предсердия, правый и левый желудочки.'],
+        ['Клапаны', 'valvae cordis', 'Трёхстворчатый, митральный (двустворчатый), аортальный и клапан лёгочного ствола.'],
+        ['Стенка сердца', 'tunicae cordis', 'Эндокард, миокард и эпикард; снаружи — околосердечная сумка (перикард).'],
+        ['Рёбра', 'costae', '7 пар истинных, 3 пары ложных и 2 пары колеблющихся рёбер.'],
+        ['Грудина', 'sternum', 'Рукоятка, тело и мечевидный отросток.']
+      ],
+      clinic: 'Перед вмешательством стоматолог уточняет сердечно-сосудистый анамнез: от него зависят выбор анестетика и доза адреналина (вазоконстриктора), а у пациентов группы высокого риска — профилактика инфекционного эндокардита антибиотиками. Боль при стенокардии и инфаркте миокарда может отдавать в нижнюю челюсть и зубы.',
+      lessons: [],
+      deep: []
+    },
+    {
+      id: 'abdomen',
+      name: 'Брюшная полость',
+      latin: 'Cavitas abdominalis',
+      lead: 'Брюшная полость расположена между диафрагмой и входом в малый таз и выстлана брюшиной. В ней лежат органы пищеварения и селезёнка, а позади брюшины (забрюшинно) — почки, надпочечники и поджелудочная железа.',
+      stats: [
+        ['9', 'областей живота'],
+        ['~1,5 м', 'длина толстой кишки'],
+        ['2', 'листка брюшины: париетальный и висцеральный']
+      ],
+      functions: [
+        'Переваривание пищи и всасывание питательных веществ: желудок, тонкая и толстая кишка.',
+        'Метаболическая и барьерная функции печени: образование желчи, синтез белков, обезвреживание токсинов.',
+        'Селезёнка участвует в иммунной защите и разрушает отработавшие эритроциты.',
+        'Почки (забрюшинно) выводят продукты обмена и поддерживают водно-солевой баланс.'
+      ],
+      structure: [
+        ['Желудок', 'gaster (ventriculus)', 'Мешкообразный орган: соляная кислота и пепсин начинают переваривание белков.'],
+        ['Печень', 'hepar', 'Самая крупная железа тела; лежит в правом подреберье.'],
+        ['Тонкая кишка', 'intestinum tenue', 'Двенадцатиперстная, тощая и подвздошная; здесь происходит основное всасывание.'],
+        ['Толстая кишка', 'intestinum crassum', 'Слепая, ободочная и прямая; всасывание воды и формирование каловых масс.'],
+        ['Области живота', 'regiones abdominis', 'Три «этажа» по три области: подреберья и эпигастрий, боковые и пупочная, паховые и лобковая.']
+      ],
+      clinic: 'Пищеварение начинается во рту: плохо пережёванная пища и отсутствие зубов дополнительно нагружают желудок. Кислый рефлюкс при ГЭРБ разрушает эмаль (дентальная эрозия), а при язвенной болезни желудка стоматолог осторожен с нестероидными обезболивающими.',
+      lessons: [],
+      deep: []
+    }
+  ];
+
+  var byId = {};
+  ZONES.forEach(function (z) { byId[z.id] = z; });
+
+  /* ---------- Элементы ---------- */
+  var view = $('anatomyView'), svg = $('atlasSvg'), plate = $('atlasPlate'),
+      card = $('atlasCard'), panel = $('atlasPanel'), zoneNav = $('atlasZones'), status = $('atlasStatus');
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('#mainTabs .main-tab'));
+  var zoneEls = Array.prototype.slice.call(svg.querySelectorAll('.zone'));
+  var header = document.querySelector('.site-header');
+
+  var activeTopic = null;     // тема, по которой отфильтрован каталог уроков
+  var selected = null;        // выбранная область
+
+  var mqCompact = window.matchMedia('(max-width: 639px)');
+  var mqStack = window.matchMedia('(max-width: 959px)');
+
+  /* ---------- Высота закреплённой шапки → CSS-переменная ---------- */
+  function setHeaderH() {
+    root.style.setProperty('--header-h', (header.offsetHeight || 0) + 'px');
+  }
+  setHeaderH();
+  if (window.ResizeObserver) new ResizeObserver(setHeaderH).observe(header);
+  window.addEventListener('resize', setHeaderH);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(setHeaderH);
+
+  /* ---------- Схема: размер видимой области ---------- */
+  function fitViewBox() {
+    var compact = mqCompact.matches;
+    svg.setAttribute('viewBox', compact ? '180 0 340 690' : '0 0 700 980');
+    svg.classList.toggle('is-cropped', compact);
+  }
+  if (mqCompact.addEventListener) mqCompact.addEventListener('change', fitViewBox);
+  else if (mqCompact.addListener) mqCompact.addListener(fitViewBox);
+  fitViewBox();
+
+  /* ---------- Список областей (кнопки над карточкой) ---------- */
+  zoneNav.innerHTML = ZONES.map(function (z) {
+    return '<button type="button" class="btn atl-zone-btn" data-zone="' + z.id + '" aria-pressed="false">' + esc(z.name) + '</button>';
+  }).join('');
+  var zoneBtns = Array.prototype.slice.call(zoneNav.querySelectorAll('button'));
+
+  /* ---------- Связанные уроки ---------- */
+  function lessonIdsFor(z) {
+    var ids = z.lessons.slice();
+    (window.LESSON_INDEX || []).forEach(function (l) {
+      if (l.topics && l.topics.indexOf(z.id) > -1 && ids.indexOf(l.id) < 0) ids.push(l.id);
+    });
+    return ids;
+  }
+  function lessonEntry(id) {
+    return (window.LESSON_INDEX || []).filter(function (l) { return l.id === id; })[0] || null;
+  }
+  function slideNumber(lessonId, match) {
+    var L = window.LESSONS && window.LESSONS[lessonId];
+    if (!L) return 0;
+    for (var i = 0; i < L.slides.length; i++) {
+      if ((L.slides[i].tocTitle || L.slides[i].title) === match) return i + 1;
+    }
+    return 0;
+  }
+
+  /* ---------- Карточка области ---------- */
+  function emptyHTML() {
+    return '<div class="atl-empty"><h2 class="atl-title">Выберите область тела</h2>' +
+      '<p>Нажмите на мозг, зубы, сердце или живот на схеме — или выберите область в списке выше. ' +
+      'Здесь появятся название, функции, строение и ссылки на уроки по теме.</p></div>';
+  }
+
+  function panelHTML(z) {
+    var h = '<button type="button" class="btn atl-to-plate" id="atlToPlate">↑ К схеме тела</button>' +
+      '<h2 class="atl-title">' + esc(z.name) + '</h2>' +
+      '<p class="atl-latin">' + esc(z.latin) + '</p>' +
+      '<p class="atl-lead">' + esc(z.lead) + '</p>' +
+      '<div class="stats">' + z.stats.map(function (s) {
+        return '<div class="stat"><b>' + esc(s[0]) + '</b><span>' + esc(s[1]) + '</span></div>';
+      }).join('') + '</div>' +
+      '<h3 class="atl-h3">Основные функции</h3>' +
+      '<ul class="atl-list">' + z.functions.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>' +
+      '<h3 class="atl-h3">Строение</h3>' +
+      '<dl class="atl-dl">' + z.structure.map(function (s) {
+        return '<div><dt>' + esc(s[0]) + '<small>' + esc(s[1]) + '</small></dt><dd>' + esc(s[2]) + '</dd></div>';
+      }).join('') + '</dl>' +
+      '<div class="callout clinic"><span class="tag">Для стоматолога</span><p>' + esc(z.clinic) + '</p></div>' +
+      '<h3 class="atl-h3">Уроки по теме</h3>';
+
+    var ids = lessonIdsFor(z);
+    if (!ids.length) {
+      h += '<p class="atl-none">Уроков по этой теме пока нет — раздел готовится. В каталоге уже есть материалы по зубам и челюсти.</p>';
+    } else {
+      h += '<ul class="atl-lessons">' + ids.map(function (id) {
+        var e = lessonEntry(id); if (!e) return '';
+        var ready = e.status === 'ready';
+        var L = window.LESSONS && window.LESSONS[id];
+        var title = 'Урок ' + e.number + '. ' + (L && L.shortTitle ? L.shortTitle : e.title);
+        return '<li>' + (ready
+          ? '<a href="#/' + encodeURIComponent(id) + '">' + esc(title) + '</a><span class="atl-status ready">Готов</span>'
+          : '<span class="soon">' + esc(title) + '</span><span class="atl-status">Скоро</span>') + '</li>';
+      }).join('') + '</ul>';
+
+      var chips = (z.deep || []).map(function (d) {
+        var n = slideNumber(d.lesson, d.match);
+        return n ? '<a class="atl-chip" href="#/' + encodeURIComponent(d.lesson) + '/' + n + '">' + esc(d.match) + '</a>' : '';
+      }).join('');
+      if (chips) h += '<div class="atl-chips"><span class="atl-chips-label">Сразу к разделам урока 1:</span>' + chips + '</div>';
+    }
+    h += '<button type="button" class="btn primary atl-cta" data-go-lessons="' + z.id + '">Перейти к урокам по этой теме</button>';
+    return h;
+  }
+
+  function select(id, opts) {
+    opts = opts || {};
+    var z = id ? byId[id] : null;
+    selected = z ? z.id : null;
+
+    zoneEls.forEach(function (el) {
+      var on = el.getAttribute('data-zone') === selected;
+      el.classList.toggle('is-active', on);
+      el.setAttribute('aria-pressed', String(on));
+    });
+    zoneBtns.forEach(function (b) {
+      b.setAttribute('aria-pressed', String(b.getAttribute('data-zone') === selected));
+    });
+    plate.classList.toggle('has-selection', !!z);
+
+    panel.innerHTML = z ? panelHTML(z) : emptyHTML();
+    panel.classList.remove('is-fresh');
+    void panel.offsetWidth;                   // перезапуск анимации появления
+    panel.classList.add('is-fresh');
+    status.textContent = z ? 'Выбрано: ' + z.name : '';
+
+    if (opts.updateHash) {
+      try { history.replaceState(null, '', z ? '#anatomy/' + z.id : '#anatomy'); } catch (e) { /* адрес не критичен */ }
+    }
+    if (z && opts.scroll && mqStack.matches) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  /* ---------- События атласа ---------- */
+  svg.addEventListener('click', function (e) {
+    var el = e.target.closest ? e.target.closest('.zone') : null;
+    if (el) select(el.getAttribute('data-zone'), { scroll: true, updateHash: true });
+  });
+  svg.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+    var el = e.target.closest ? e.target.closest('.zone') : null;
+    if (!el) return;
+    e.preventDefault();
+    select(el.getAttribute('data-zone'), { scroll: false, updateHash: true });
+  });
+  zoneNav.addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-zone]');
+    if (b) select(b.getAttribute('data-zone'), { updateHash: true });
+  });
+  function hoverZone(e, on) {
+    var b = e.target.closest ? e.target.closest('button[data-zone]') : null;
+    if (!b) return;
+    var el = svg.querySelector('.zone[data-zone="' + b.getAttribute('data-zone') + '"]');
+    if (el) el.classList.toggle('is-hover', on);
+  }
+  zoneNav.addEventListener('mouseover', function (e) { hoverZone(e, true); });
+  zoneNav.addEventListener('mouseout', function (e) { hoverZone(e, false); });
+  zoneNav.addEventListener('focusin', function (e) { hoverZone(e, true); });
+  zoneNav.addEventListener('focusout', function (e) { hoverZone(e, false); });
+
+  panel.addEventListener('click', function (e) {
+    var go = e.target.closest ? e.target.closest('[data-go-lessons]') : null;
+    if (go) { activeTopic = go.getAttribute('data-go-lessons'); navigate('#/'); return; }
+    if (e.target.closest && e.target.closest('#atlToPlate')) {
+      plate.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+
+  /* ---------- Каталог уроков: фильтр по теме ---------- */
+  var lessonsEl = $('lessons');
+  var banner = document.createElement('div');
+  banner.className = 'atl-filter';
+  banner.id = 'atlFilter';
+  banner.hidden = true;
+  banner.setAttribute('role', 'status');
+  banner.innerHTML = '<div class="atl-filter-inner"><p class="atl-filter-text" id="atlFilterText"></p>' +
+    '<div class="atl-filter-actions"><a class="btn" id="atlFilterBack" href="#anatomy">← К атласу</a>' +
+    '<button type="button" class="btn" id="atlFilterReset">Показать все уроки</button></div></div>';
+  lessonsEl.parentNode.insertBefore(banner, lessonsEl);
+
+  // карточки каталога строятся в том же порядке, что и LESSON_INDEX — помечаем их id урока
+  (function tagCards() {
+    var kids = lessonsEl.children;
+    (window.LESSON_INDEX || []).forEach(function (l, i) {
+      if (kids[i]) kids[i].setAttribute('data-lesson-id', l.id);
+    });
+  })();
+
+  function applyFilter(topicId) {
+    var z = topicId ? byId[topicId] : null;
+    var cards = Array.prototype.slice.call(lessonsEl.children);
+    cards.forEach(function (c) { c.classList.remove('atl-hidden', 'atl-match'); });
+    if (!z) { banner.hidden = true; return; }
+
+    var ids = lessonIdsFor(z);
+    var text = $('atlFilterText');
+    $('atlFilterBack').setAttribute('href', '#anatomy/' + z.id);
+    banner.hidden = false;
+    if (!ids.length) {
+      text.textContent = 'По теме «' + z.name + '» уроков пока нет — раздел готовится. Ниже весь каталог.';
+      return;
+    }
+    cards.forEach(function (c) {
+      var m = ids.indexOf(c.getAttribute('data-lesson-id')) > -1;
+      c.classList.toggle('atl-hidden', !m);
+      c.classList.toggle('atl-match', m);
+    });
+    text.textContent = 'Уроки по теме «' + z.name + '»: ' + ids.length + '.';
+  }
+
+  $('atlFilterReset').addEventListener('click', function () {
+    activeTopic = null;
+    applyFilter(null);
+  });
+
+  /* ---------- Вкладки ---------- */
+  function currentTab() {
+    return /^#anatomy(\/|$)/.test(location.hash) ? 'anatomy' : 'lessons';
+  }
+  function zoneFromHash() {
+    var m = /^#anatomy\/([a-z-]+)$/.exec(location.hash);
+    return m && byId[m[1]] ? m[1] : null;
+  }
+  function navigate(hash) {
+    if (location.hash === hash) sync(); else location.hash = hash;
+  }
+
+  function sync() {
+    var tab = currentTab();
+    root.setAttribute('data-tab', tab);
+    view.hidden = tab !== 'anatomy';
+    tabs.forEach(function (a) {
+      if (a.getAttribute('data-tab') === tab) a.setAttribute('aria-current', 'page');
+      else a.removeAttribute('aria-current');
+    });
+    if (tab === 'anatomy') {
+      document.title = 'Анатомия — Атлас стоматолога';
+      select(zoneFromHash());
+    } else {
+      applyFilter(activeTopic);
+    }
+    setHeaderH();
+  }
+
+  // клик по вкладке «Уроки» всегда открывает полный каталог
+  tabs.forEach(function (a) {
+    a.addEventListener('click', function () {
+      if (a.getAttribute('data-tab') === 'lessons') { activeTopic = null; applyFilter(null); }
+    });
+  });
+  // клик по названию сайта — на вкладку по умолчанию
+  var brand = document.querySelector('.site-header .brand');
+  if (brand) brand.addEventListener('click', function (e) {
+    e.preventDefault();
+    activeTopic = null;
+    window.scrollTo({ top: 0 });
+    navigate(DEFAULT_TAB === 'anatomy' ? '#anatomy' : '#/');
+  });
+
+  // порядок важен: этот обработчик подключён после маршрутизатора уроков и отрабатывает следом
+  window.addEventListener('hashchange', sync);
+
+  if (!location.hash || location.hash === '#') {
+    try { if (DEFAULT_TAB === 'anatomy') history.replaceState(null, '', '#anatomy'); } catch (e) { /* ok */ }
+  }
+  sync();
+})();
   </script>
 </body>
 </html>
